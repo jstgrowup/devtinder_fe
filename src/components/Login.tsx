@@ -2,8 +2,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { zLogin, type LoginSchemaType } from "../types/auth";
 import { useLogin } from "../hooks/useAuth";
-import type { AxiosError } from "axios";
 import { openErrorToast, openSuccessToast } from "./common/toast";
+import { useAuth } from "../stores/authStore";
 
 const Login = () => {
   const {
@@ -12,14 +12,15 @@ const Login = () => {
     formState: { errors },
   } = useForm<LoginSchemaType>({ resolver: zodResolver(zLogin) });
   const { mutate: login } = useLogin();
-
+  const setUser = useAuth((state) => state.setUser);
   const onSubmit = (payload: LoginSchemaType) => {
     login(payload, {
       onSuccess: (response) => {
+        setUser(response.data);
         openSuccessToast({ message: response.message });
       },
-      onError: (error: Error | AxiosError<{ message: string }>) => {
-        openErrorToast({ message: error.message });
+      onError: (error) => {
+        openErrorToast({ error });
       },
     });
   };

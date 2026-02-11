@@ -9,6 +9,7 @@ export const openErrorToast = ({
 }) => {
   let updatedMessage = "";
   const axiosError = error as AxiosError<{ message: string }>;
+  console.log("axiosError:", axiosError);
 
   if (axiosError?.response?.data?.message) {
     updatedMessage = axiosError?.response?.data?.message ?? "";
@@ -16,7 +17,10 @@ export const openErrorToast = ({
     updatedMessage = message ?? "Something went wrong";
   }
 
-  return toast.error(<p>{updatedMessage}</p>, { duration: 1000 });
+  return toast.error(<p>{updatedMessage}</p>, {
+    duration: 1000,
+    position: "top-right",
+  });
 };
 
 export const openSuccessToast = ({ message }: { message?: string }) => {
