@@ -1,4 +1,8 @@
+import { useAuth } from "../stores/authStore";
+
 const Navbar = () => {
+  const user = useAuth((state) => state.user);
+  console.log("user:", user);
   return (
     <>
       <div className="navbar bg-base-100 shadow-lg">
@@ -37,7 +41,6 @@ const Navbar = () => {
           </div>
           <a className="btn btn-ghost text-xl">Devtinder</a>
         </div>
-
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">
             <li>
@@ -54,6 +57,40 @@ const Navbar = () => {
             </li>
           </ul>
         </div>
+        {user?.photoUrl && (
+          <div className="navbar-end">
+            <div className="dropdown dropdown-end">
+              <div
+                tabIndex={0}
+                role="button"
+                className="flex items-center gap-4 cursor-pointer px-3 py-2 "
+              >
+                <span className="hidden md:inline-block font-medium">
+                  Welcome, {user?.firstName}
+                </span>
+                <div className="avatar">
+                  <div className="w-10 rounded-full ring-2 ring-primary ring-offset-2">
+                    <img src={user?.photoUrl} alt="User profile" />
+                  </div>
+                </div>
+              </div>
+              <ul
+                tabIndex={0}
+                className="menu menu-sm dropdown-content mt-3  p-2 shadow bg-base-100 rounded-box w-52"
+              >
+                <li>
+                  <a>Profile</a>
+                </li>
+                <li>
+                  <a>Settings</a>
+                </li>
+                <li className="border-t border-base-300 mt-2 pt-2">
+                  <a className="text-error">Logout</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );

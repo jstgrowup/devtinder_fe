@@ -2,8 +2,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { zLogin, type LoginSchemaType } from "../types/auth";
 import { useLogin } from "../hooks/useAuth";
-import { openErrorToast, openSuccessToast } from "./common/toast";
+import { openErrorToast, openSuccessToast } from "../components/common/toast";
 import { useAuth } from "../stores/authStore";
+import { useNavigate } from "react-router";
+import { routes } from "../utils/routes";
 
 const Login = () => {
   const {
@@ -11,6 +13,7 @@ const Login = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<LoginSchemaType>({ resolver: zodResolver(zLogin) });
+  const navigate = useNavigate();
   const { mutate: login } = useLogin();
   const setUser = useAuth((state) => state.setUser);
   const onSubmit = (payload: LoginSchemaType) => {
@@ -18,6 +21,7 @@ const Login = () => {
       onSuccess: (response) => {
         setUser(response.data);
         openSuccessToast({ message: response.message });
+        navigate(routes.feed);
       },
       onError: (error) => {
         openErrorToast({ error });
