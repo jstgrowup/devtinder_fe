@@ -1,4 +1,4 @@
-import LoginTemplate from "@/module/auth/templates/sign-in-form";
+import LoginTemplate from "@/module/auth/templates/sign-in-template";
 
 const Login = () => {
   return <LoginTemplate />;

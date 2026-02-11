@@ -7,6 +7,7 @@ import { LoginSchemaType, zLogin } from "../utils/zod";
 import { useAuth } from "@/store/authStore";
 import { useRouter } from "next/navigation";
 import { routes } from "@/config/routes";
+import Link from "next/link";
 
 const LoginTemplate = () => {
   const router = useRouter();
@@ -33,7 +34,7 @@ const LoginTemplate = () => {
   return (
     <>
       <div className="flex items-center justify-center py-3">
-        <div className="card w-96  shadow-xl border ">
+        <div className="card w-96  shadow-xl  ">
           <div className="card-body">
             <h2 className="card-title text-3xl font-bold text-center justify-center mb-2">
               Welcome Back
@@ -97,9 +98,12 @@ const LoginTemplate = () => {
 
             <p className="text-center text-sm">
               Don't have an account?
-              <a href="#" className="link link-primary font-semibold">
+              <Link
+                href={routes.signUp}
+                className="link link-primary font-semibold"
+              >
                 Sign up
-              </a>
+              </Link>
             </p>
           </div>
         </div>
