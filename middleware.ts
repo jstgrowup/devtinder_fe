@@ -11,10 +11,13 @@ export function middleware(request: NextRequest) {
   if (!token && !isPublicPath) {
     return NextResponse.redirect(new URL(routes.login, request.url));
   }
-
+  // If trying to access public paths with a token, redirect to feed
+  if (token && isPublicPath) {
+    return NextResponse.redirect(new URL(routes.feed, request.url));
+  }
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/login", "/signup", "/"],
+  matcher: ["/login", "/signup", "/", "/profile"],
 };

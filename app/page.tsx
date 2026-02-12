@@ -1,9 +1,5 @@
-import Image from "next/image";
+import FeedTemplate from "@/module/feed/templates/feed-template";
 
 export default function Home() {
-  return (
-    <>
-      <h1>Home</h1>
-    </>
-  );
+  return <FeedTemplate />;
 }

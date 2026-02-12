@@ -31,4 +31,14 @@ const useProfile = (options = {}) => {
   });
 };
 
-export { useLogin, useProfile };
+const useLogout = () => {
+  return useMutation({
+    mutationFn: async () => {
+      const response = await apiClient.post<CommonResponse<IUser>>(
+        `${API_AUTH}/logout`,
+      );
+      return response.data;
+    },
+  });
+};
+export { useLogin, useProfile, useLogout };

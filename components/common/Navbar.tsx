@@ -1,9 +1,20 @@
 "use client";
 import { useAuth } from "@/store/authStore";
+import CommonLoader from "./Loader";
+import Link from "next/link";
+import { routes } from "@/config/routes";
+import { useLogout } from "@/module/auth/hooks/useAuth";
+import { useRouter } from "next/navigation";
 
 const Navbar = () => {
-  const user = useAuth((state) => state.user);
-
+  const { user, userIsLoading, storeLogout } = useAuth((state) => state);
+  const router = useRouter();
+  const { mutate: logout } = useLogout();
+  const handleLogout = () => {
+    logout();
+    router.push(routes.login);
+    storeLogout();
+  };
   return (
     <>
       <div className="navbar bg-base-100 shadow-lg">
@@ -40,27 +51,16 @@ const Navbar = () => {
               </li>
             </ul>
           </div>
-          <a className="btn btn-ghost text-xl">Devtinder</a>
+          <Link href={routes.feed} className="btn btn-ghost text-xl">
+            Devtinder
+          </Link>
         </div>
-        <div className="navbar-center hidden lg:flex">
-          <ul className="menu menu-horizontal px-1">
-            <li>
-              <a>Home</a>
-            </li>
-            <li>
-              <a>About</a>
-            </li>
-            <li>
-              <a>Services</a>
-            </li>
-            <li>
-              <a>Contact</a>
-            </li>
-          </ul>
-        </div>
-        {user?.photoUrl && (
-          <div className="navbar-end">
-            <div className="dropdown dropdown-end">
+
+        <div className="navbar-end">
+          <div className="dropdown dropdown-end">
+            {userIsLoading ? (
+              <CommonLoader />
+            ) : !userIsLoading && user ? (
               <div
                 tabIndex={0}
                 role="button"
@@ -75,23 +75,26 @@ const Navbar = () => {
                   </div>
                 </div>
               </div>
-              <ul
-                tabIndex={0}
-                className="menu menu-sm dropdown-content mt-3  p-2 shadow bg-base-100 rounded-box w-52"
-              >
-                <li>
-                  <a>Profile</a>
-                </li>
-                <li>
-                  <a>Settings</a>
-                </li>
-                <li className="border-t border-base-300 mt-2 pt-2">
-                  <a className="text-error">Logout</a>
-                </li>
-              </ul>
-            </div>
+            ) : null}
+
+            <ul
+              tabIndex={0}
+              className="menu menu-sm dropdown-content mt-3  p-2 shadow bg-base-100 rounded-box w-52"
+            >
+              <li>
+                <Link href={routes.profile}>Profile</Link>
+              </li>
+              <li>
+                <a>Settings</a>
+              </li>
+              <li className="border-t border-base-300 mt-2 pt-2">
+                <div onClick={handleLogout} className="text-error">
+                  Logout
+                </div>
+              </li>
+            </ul>
           </div>
-        )}
+        </div>
       </div>
     </>
   );
