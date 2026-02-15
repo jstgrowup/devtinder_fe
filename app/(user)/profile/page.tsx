@@ -1,5 +1,7 @@
+import ProfileTemplate from "@/module/profile/templates/profile-template";
+
 const Profile = () => {
-  return <div>Profile</div>;
+  return <ProfileTemplate />;
 };
 
 export default Profile;

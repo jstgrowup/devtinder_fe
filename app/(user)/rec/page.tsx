@@ -1,5 +1,7 @@
 import FeedTemplate from "@/module/feed/templates/feed-template";
 
-export default function Home() {
+const Reccomendation = () => {
   return <FeedTemplate />;
-}
+};
+
+export default Reccomendation;

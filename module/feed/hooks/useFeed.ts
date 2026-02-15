@@ -6,7 +6,7 @@ import { IUser } from "@/module/auth/types";
 const API_USER = `/user`;
 const useFeed = (options = {}) => {
   return useQuery({
-    queryKey: ["me"],
+    queryKey: ["feed"],
     queryFn: async () => {
       const response = await apiClient.get<CommonResponse<IUser[]>>(
         `${API_USER}/feed`,

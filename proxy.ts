@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { routes } from "@/config/routes";
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname;
   const publicPaths = ["/login", "/signup"];
   const isPublicPath = publicPaths.includes(path);
@@ -19,5 +19,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/login", "/signup", "/", "/profile"],
+  matcher: ["/login", "/signup", "/rec", "/profile"],
 };

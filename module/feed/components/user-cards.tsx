@@ -21,7 +21,8 @@ const UserCard: React.FC<IUser> = ({
         <p>{age + "," + gender}</p>
         <p>{about}</p>
         <div className="card-actions">
-          <button className="btn btn-primary">Buy Now</button>
+          <button className="btn btn-primary">Reject</button>
+          <button className="btn btn-primary">Send Request</button>
         </div>
       </div>
     </div>

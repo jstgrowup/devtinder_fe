@@ -1,6 +1,6 @@
 export const routes = {
   signUp: "/signup",
   login: "/login",
-  feed: "/",
+  feed: "/rec",
   profile: "/profile",
 };
