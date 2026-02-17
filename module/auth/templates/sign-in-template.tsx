@@ -8,15 +8,23 @@ import { useAuth } from "@/store/authStore";
 import { useRouter } from "next/navigation";
 import { routes } from "@/config/routes";
 import Link from "next/link";
+import { AuthWrapper } from "../components/auth-wrapper";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 
 const LoginTemplate = () => {
   const router = useRouter();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<LoginSchemaType>({ resolver: zodResolver(zLogin) });
-  const { mutate: login } = useLogin();
+  const form = useForm<LoginSchemaType>({ resolver: zodResolver(zLogin) });
+  const { mutate: login, isPending } = useLogin();
   const setUser = useAuth((state) => state.setUser);
   const onSubmit = (payload: LoginSchemaType) => {
     login(payload, {
@@ -33,80 +41,80 @@ const LoginTemplate = () => {
 
   return (
     <>
-      <div className="flex items-center justify-center py-3">
-        <div className="card w-96  shadow-xl  ">
-          <div className="card-body">
-            <h2 className="card-title text-3xl font-bold text-center justify-center mb-2">
-              Welcome Back
-            </h2>
-            <p className="text-center text-base-content/60 mb-6">
-              Please login to your account
-            </p>
-
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <div className="form-control w-full mb-4">
-                <label className="label">
-                  <span className="label-text">Email</span>
-                </label>
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="input input-bordered w-full"
-                  {...register("emailId")}
-                />
-                {errors.emailId && (
-                  <span className="text-error text-sm mt-1">
-                    {errors.emailId.message}
-                  </span>
+      <div className="flex min-h-screen items-center justify-center px-4">
+        <AuthWrapper
+          title="Welcome Back"
+          description="Please login to your account"
+        >
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+              <FormField
+                control={form.control}
+                name="emailId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="email"
+                        placeholder="Enter your email"
+                        autoFocus
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
                 )}
-              </div>
+              />
 
-              <div className="form-control w-full mb-2">
-                <label className="label">
-                  <span className="label-text">Password</span>
-                </label>
-                <input
-                  type="password"
-                  placeholder="Enter your password"
-                  className="input input-bordered w-full"
-                  {...register("password")}
-                />
-                {errors.password && (
-                  <span className="text-error text-sm mt-1">
-                    {errors.password.message}
-                  </span>
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        placeholder="Enter your password"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
                 )}
-              </div>
+              />
 
-              <div className="text-right mb-6">
-                <a
-                  href="#"
-                  className="label-text-alt link link-hover text-primary"
+              <div className="flex justify-end text-sm">
+                <Link
+                  href="/forgot-password"
+                  className="text-primary hover:underline"
                 >
                   Forgot password?
-                </a>
+                </Link>
               </div>
 
-              <div className="form-control mt-6">
-                <button type="submit" className="btn btn-primary w-full">
-                  Login
-                </button>
-              </div>
-            </form>
-
-            <div className="divider">OR</div>
-
-            <p className="text-center text-sm">
-              Don't have an account?
-              <Link
-                href={routes.signUp}
-                className="link link-primary font-semibold"
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={!form.formState.isValid || isPending}
               >
-                Sign up
-              </Link>
-            </p>
+                {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Login
+              </Button>
+            </form>
+          </Form>
+
+          <div className="mt-6 text-center text-sm">
+            Don't have an account?{" "}
+            <Link
+              href={routes.signUp}
+              className="text-primary font-medium hover:underline"
+            >
+              Sign up
+            </Link>
           </div>
-        </div>
+        </AuthWrapper>
       </div>
     </>
   );
