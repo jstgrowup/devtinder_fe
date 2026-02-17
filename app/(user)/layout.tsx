@@ -1,11 +1,11 @@
 "use client";
-import { useProfile } from "@/module/auth/hooks/useAuth";
 import { useAuth } from "@/store/authStore";
 import { useEffect } from "react";
 import Footer from "@/components/common/Footer";
 import Navbar from "@/components/common/Navbar";
+import { useGetProfile } from "@/module/profile/hooks/useProfile";
 function AuthWrapper({ children }: { children: React.ReactNode }) {
-  const { data, isLoading } = useProfile();
+  const { data, isLoading } = useGetProfile();
 
   const { setUser, setUserLoading } = useAuth((state) => state);
 

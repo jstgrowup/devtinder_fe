@@ -1,5 +1,7 @@
+import SignUpTemplate from "@/module/auth/templates/sign-up-template";
+
 const Signup = () => {
-  return <div>Signup</div>;
+  return <SignUpTemplate />;
 };
 
 export default Signup;
