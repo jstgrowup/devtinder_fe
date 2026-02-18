@@ -30,6 +30,7 @@ import { Loader2 } from "lucide-react";
 import { useAuth } from "@/store/authStore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { EditProfileSchemaType, zEditProfile } from "../utils/zod";
+import { Badge } from "@/components/ui/badge";
 interface EditProfileModalProps {
   onSave: (data: EditProfileSchemaType) => void;
   open: boolean;
@@ -69,6 +70,24 @@ export function EditProfileModal({
       setPreview(user.photoUrl);
     }
   }, [user]);
+  const skills = form.watch("skills") || [];
+  const [newSkill, setNewSkill] = useState("");
+
+  const handleAddSkill = () => {
+    const trimmed = newSkill.trim();
+    if (!trimmed) return;
+    if (skills.includes(trimmed)) return;
+
+    form.setValue("skills", [...skills, trimmed]);
+    setNewSkill("");
+  };
+
+  const handleRemoveSkill = (skillToRemove: string) => {
+    form.setValue(
+      "skills",
+      skills.filter((skill) => skill !== skillToRemove),
+    );
+  };
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="sm:max-w-lg">
@@ -84,10 +103,18 @@ export function EditProfileModal({
                 <AvatarFallback>{user?.firstName}</AvatarFallback>
               </Avatar>
 
-              <Input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
+              <FormField
+                control={form.control}
+                name="photoUrl"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Photo Url</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
             </div>
 
@@ -173,7 +200,58 @@ export function EditProfileModal({
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="skills"
+              render={() => (
+                <FormItem>
+                  <FormLabel>Skills</FormLabel>
+                  <div className="flex gap-2 mb-4">
+                    <Input
+                      placeholder="Add a skill..."
+                      value={newSkill}
+                      onChange={(e) => setNewSkill(e.target.value)}
+                      onKeyDown={(e) => e.key === "Enter" && handleAddSkill()}
+                    />
 
+                    <Button
+                      type="button"
+                      onClick={handleAddSkill}
+                      className="cursor-pointer"
+                    >
+                      Add
+                    </Button>
+                  </div>
+
+                  <div className="flex flex-wrap gap-2">
+                    {skills.length ? (
+                      skills.map((skill, index) => (
+                        <Badge
+                          key={index}
+                          variant="secondary"
+                          className="flex items-center gap-2 pr-1"
+                        >
+                          {skill}
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveSkill(skill)}
+                            className="ml-1 text-xs hover:text-destructive"
+                          >
+                            ×
+                          </button>
+                        </Badge>
+                      ))
+                    ) : (
+                      <p className="text-sm text-muted-foreground">
+                        No skills added
+                      </p>
+                    )}
+                  </div>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <div className="flex justify-end gap-3 pt-2">
               <Button
                 type="button"

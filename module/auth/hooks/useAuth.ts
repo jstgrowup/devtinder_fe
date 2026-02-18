@@ -19,7 +19,7 @@ const useLogin = () => {
 const useSignup = () => {
   return useMutation({
     mutationFn: async (body: SignupSchemaType) => {
-      const response = await apiClient.post<BaseResponse>(
+      const response = await apiClient.post<CommonResponse<IUser>>(
         `${API_AUTH}/signup`,
         body,
       );

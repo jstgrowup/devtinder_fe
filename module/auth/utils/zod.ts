@@ -22,12 +22,7 @@ export const zSignUp = z.object({
     .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
     .regex(/[a-z]/, "Password must contain at least one lowercase letter")
     .regex(/[0-9]/, "Password must contain at least one number"),
-  age: z.number().min(1, "Please enter the age"),
-  gender: z.enum(["male", "female", "others"]),
-  about: z.string().optional(),
-  skills: z
-    .array(z.string())
-    .max(10, { message: "You can have a maximum of 10 skills" }),
 });
+
 export type LoginSchemaType = z.infer<typeof zLogin>;
 export type SignupSchemaType = z.infer<typeof zSignUp>;

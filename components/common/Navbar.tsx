@@ -60,13 +60,13 @@ const Navbar = () => {
                 </DropdownMenuTrigger>
 
                 <DropdownMenuContent align="end" className="w-48">
-                  <DropdownMenuItem asChild>
+                  <DropdownMenuItem asChild className="cursor-pointer">
                     <Link href={routes.profile}>Profile</Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
+                  <DropdownMenuItem asChild className="cursor-pointer">
                     <Link href={routes.connections}>Connections</Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
+                  <DropdownMenuItem asChild className="cursor-pointer">
                     <Link href={routes.requests}>Requests</Link>
                   </DropdownMenuItem>
 
@@ -74,7 +74,7 @@ const Navbar = () => {
 
                   <DropdownMenuItem
                     onClick={handleLogout}
-                    className="text-red-500 focus:text-red-500"
+                    className="text-red-500 focus:text-red-500 cursor-pointer"
                   >
                     Logout
                   </DropdownMenuItem>

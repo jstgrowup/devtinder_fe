@@ -19,15 +19,19 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
+import { useAuth } from "@/store/authStore";
 const SignUpTemplate = () => {
   const router = useRouter();
+  const setUser = useAuth((state) => state.setUser);
   const form = useForm<SignupSchemaType>({ resolver: zodResolver(zSignUp) });
   const { mutate: signup, isPending } = useSignup();
   const onSubmit = (payload: SignupSchemaType) => {
     signup(payload, {
       onSuccess: (response) => {
+        setUser(response.data);
+
         openSuccessToast({ message: response.message });
-        router.push(routes.feed);
+        router.push(routes.profile);
       },
       onError: (error) => {
         openErrorToast({ error });
@@ -41,6 +45,32 @@ const SignUpTemplate = () => {
         <AuthWrapper title="Welcome," description="Please Signup">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+              <FormField
+                control={form.control}
+                name="firstName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>First Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Enter your first name" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="lastName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Last Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Enter your last name" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <FormField
                 control={form.control}
                 name="emailId"
@@ -93,7 +123,7 @@ const SignUpTemplate = () => {
                 disabled={!form.formState.isValid || isPending}
               >
                 {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Login
+                Sign up
               </Button>
             </form>
           </Form>

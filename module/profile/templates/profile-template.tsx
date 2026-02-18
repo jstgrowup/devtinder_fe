@@ -28,7 +28,6 @@ const ProfileTemplate = () => {
           await queryClient.fetchQuery({
             queryKey: ["me"],
           });
-
         if (updatedProfile?.data) {
           setUser(updatedProfile.data);
         }
@@ -78,19 +77,17 @@ const ProfileTemplate = () => {
 
           <CardContent className="space-y-6 py-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {user?.age && (
-                <div>
-                  <p className="text-sm text-muted-foreground">Age</p>
-                  <p className="font-medium">{user?.age}</p>
-                </div>
-              )}
+              <div>
+                <p className="text-sm text-muted-foreground">Age</p>
+                <p className="font-medium">{user?.age ?? "N/A"}</p>
+              </div>
 
-              {user?.gender && (
-                <div>
-                  <p className="text-sm text-muted-foreground">Gender</p>
-                  <p className="font-medium capitalize">{user?.gender}</p>
-                </div>
-              )}
+              <div>
+                <p className="text-sm text-muted-foreground">Gender</p>
+                <p className="font-medium capitalize">
+                  {user?.gender ?? "N/A"}
+                </p>
+              </div>
             </div>
 
             <Separator />
