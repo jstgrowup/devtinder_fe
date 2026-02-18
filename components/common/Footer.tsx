@@ -1,12 +1,15 @@
+import { Separator } from "@/components/ui/separator";
+
 const Footer = () => {
   return (
-    <>
-      <footer className="footer footer-center p-4 bg-base-300 text-base-content">
-        <aside>
-          <p>Copyright © 2024 - All rights reserved by Devtinder</p>
-        </aside>
-      </footer>
-    </>
+    <footer className="w-full border-t bg-background">
+      <div className="container mx-auto flex flex-col items-center justify-center gap-2 px-4 py-6 text-center">
+        <Separator />
+        <p className="text-sm text-muted-foreground">
+          © {new Date().getFullYear()} Devtinder. All rights reserved.
+        </p>
+      </div>
+    </footer>
   );
 };
 
