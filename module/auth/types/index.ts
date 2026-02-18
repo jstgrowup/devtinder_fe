@@ -4,8 +4,8 @@ export interface IUser {
   lastName?: string;
   emailId: string;
   password: string;
-  age?: number;
-  gender?: "male" | "female" | "others";
+  age: number;
+  gender: "male" | "female" | "others";
   about: string;
   photoUrl: string;
   skills: string[];

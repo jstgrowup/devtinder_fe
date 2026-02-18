@@ -1,26 +1,38 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { REQUEST_STATUS } from "@/module/feed/types";
 
 interface ActionUserCardProps {
   name: string;
   about: string;
-  photoUrl?: string;
-  onAccept: () => void;
-  onReject: () => void;
+  connectionRequestId: string;
+  photoUrl: string;
+  age: number;
+  gender: string;
+  handleReviewRequest?: ({
+    status,
+    requestId,
+  }: {
+    status: REQUEST_STATUS;
+    requestId: string;
+  }) => void;
+  actionsAllowed?: boolean;
 }
 
 export function ActionUserCard({
+  connectionRequestId,
+  age,
+  gender,
   name,
   about,
   photoUrl,
-  onAccept,
-  onReject,
+  handleReviewRequest,
+  actionsAllowed = true,
 }: ActionUserCardProps) {
   return (
-    <Card className="bg-zinc-900 text-white border-zinc-800 shadow-lg">
+    <Card className="text-black shadow-lg">
       <CardContent className="flex items-center justify-between p-5">
-        {/* Left Section */}
         <div className="flex items-center gap-4">
           <Avatar className="h-14 w-14">
             <AvatarImage src={photoUrl} />
@@ -31,27 +43,39 @@ export function ActionUserCard({
 
           <div>
             <h3 className="font-semibold text-lg">{name}</h3>
+            <p className="text-sm text-zinc-400">{`${age} ${gender}`}</p>
+
             <p className="text-sm text-zinc-400">{about}</p>
           </div>
         </div>
+        {actionsAllowed && (
+          <div className="flex gap-3">
+            <Button
+              onClick={() =>
+                handleReviewRequest?.({
+                  status: REQUEST_STATUS.REJECTED,
+                  requestId: connectionRequestId,
+                })
+              }
+              variant={"secondary"}
+              className=" cursor-pointer"
+            >
+              Reject
+            </Button>
 
-        {/* Right Section */}
-        <div className="flex gap-3">
-          <Button
-            variant="outline"
-            onClick={onReject}
-            className="border-zinc-700 text-white hover:bg-zinc-800"
-          >
-            Reject
-          </Button>
-
-          <Button
-            onClick={onAccept}
-            className="bg-linear-to-r from-purple-500 to-pink-500 text-white hover:opacity-90"
-          >
-            Accept
-          </Button>
-        </div>
+            <Button
+              onClick={() =>
+                handleReviewRequest?.({
+                  status: REQUEST_STATUS.ACCEPTED,
+                  requestId: connectionRequestId,
+                })
+              }
+              className="cursor-pointer"
+            >
+              Accept
+            </Button>
+          </div>
+        )}{" "}
       </CardContent>
     </Card>
   );

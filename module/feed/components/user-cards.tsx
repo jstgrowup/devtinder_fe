@@ -60,7 +60,7 @@ const UserCard: React.FC<IUserCardProp> = ({
 
       <CardFooter className="flex gap-3">
         <Button
-          variant="outline"
+          variant="secondary"
           className="flex-1 cursor-pointer"
           onClick={() =>
             handleAcceptOrReject({

@@ -5,7 +5,7 @@ import { IUser } from "@/module/auth/types";
 import { REQUEST_STATUS } from "../types";
 
 export const API_USER = `/user`;
-const API_REQUEST = `/request`;
+export const API_REQUEST = `/request`;
 
 const useFeed = (options = {}) => {
   return useQuery({
