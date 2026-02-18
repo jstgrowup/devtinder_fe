@@ -7,11 +7,17 @@ import {
   useReviewConnectionRequest,
 } from "../hooks/useRequests";
 import { openErrorToast, openSuccessToast } from "@/components/common/toast";
+import DataEmptyHandler from "@/components/common/common-data-empty-handler";
+import { IConnectionRequests } from "../types";
+import { CommonLoader } from "@/components/common/loader";
 
 const RequestTemplate = () => {
-  const { data: userRequests, refetch: refetchRequests } = useGetRequests();
-  const { mutate: reviewConnectionRequest, isPending } =
-    useReviewConnectionRequest();
+  const {
+    data: userRequests,
+    refetch: refetchRequests,
+    isPending: isRequestsPending,
+  } = useGetRequests();
+  const { mutate: reviewConnectionRequest } = useReviewConnectionRequest();
 
   const handleReviewRequest = ({
     status,
@@ -34,20 +40,29 @@ const RequestTemplate = () => {
     );
   };
 
+  if (isRequestsPending) {
+    return <CommonLoader fullScreen={true} />;
+  }
+
   return (
     <>
-      {userRequests?.data.map((request) => (
-        <ActionUserCard
-          key={request._id}
-          connectionRequestId={request._id}
-          name={request.fromUserId.firstName}
-          about={request.fromUserId.about}
-          photoUrl={request.fromUserId.photoUrl}
-          handleReviewRequest={handleReviewRequest}
-          age={request.fromUserId.age}
-          gender={request.fromUserId.gender}
-        />
-      ))}
+      <DataEmptyHandler<IConnectionRequests>
+        data={userRequests?.data}
+        emptyMessage="No requests available"
+      >
+        {userRequests?.data.map((request) => (
+          <ActionUserCard
+            key={request._id}
+            connectionRequestId={request._id}
+            name={request.fromUserId.firstName}
+            about={request.fromUserId.about}
+            photoUrl={request.fromUserId.photoUrl}
+            handleReviewRequest={handleReviewRequest}
+            age={request.fromUserId.age}
+            gender={request.fromUserId.gender}
+          />
+        ))}
+      </DataEmptyHandler>
     </>
   );
 };

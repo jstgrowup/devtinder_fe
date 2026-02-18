@@ -1,9 +1,10 @@
 "use client";
 import { useAuth } from "@/store/authStore";
 import { useEffect } from "react";
-import Footer from "@/components/common/Footer";
-import Navbar from "@/components/common/Navbar";
+
 import { useGetProfile } from "@/module/profile/hooks/useProfile";
+import Navbar from "@/components/common/navbar";
+import Footer from "@/components/common/footer";
 function AuthWrapper({ children }: { children: React.ReactNode }) {
   const { data, isLoading } = useGetProfile();
 

@@ -1,6 +1,5 @@
 "use client";
 import { useAuth } from "@/store/authStore";
-import CommonLoader from "./Loader";
 import Link from "next/link";
 import { routes } from "@/config/routes";
 import { useLogout } from "@/module/auth/hooks/useAuth";
@@ -12,14 +11,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  NavigationMenu,
-  NavigationMenuList,
-  NavigationMenuItem,
-} from "@/components/ui/navigation-menu";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
+import { CommonLoader } from "./loader";
+
 const Navbar = () => {
   const { user, userIsLoading, storeLogout } = useAuth((state) => state);
   const router = useRouter();

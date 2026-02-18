@@ -1,5 +1,5 @@
 "use client";
-import CommonLoader from "@/components/common/Loader";
+import { CommonLoader } from "@/components/common/loader";
 import UserCard from "../components/user-cards";
 import { useFeed, useSendConnectionRequest } from "../hooks/useFeed";
 import { openErrorToast, openSuccessToast } from "@/components/common/toast";
@@ -11,7 +11,7 @@ const FeedTemplate = () => {
     useSendConnectionRequest();
 
   if (isLoading) {
-    return <CommonLoader />;
+    return <CommonLoader fullScreen={true} />;
   }
   const handleAcceptOrReject = ({
     status,
