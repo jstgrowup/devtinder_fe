@@ -3,7 +3,7 @@ import { BaseResponse, CommonResponse } from "@/types";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { EditProfileSchemaType } from "../utils/zod";
 import { IUser } from "@/module/auth/types";
-const API_PROFILE = "/profile";
+export const API_PROFILE = "/profile";
 const useUpdateProfile = () => {
   return useMutation({
     mutationFn: async (body: EditProfileSchemaType) => {

@@ -3,4 +3,6 @@ export const routes = {
   login: "/login",
   feed: "/rec",
   profile: "/profile",
+  connections: "/connections",
+  requests: "/requests",
 };

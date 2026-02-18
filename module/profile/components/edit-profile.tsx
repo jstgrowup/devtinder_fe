@@ -26,7 +26,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { IUser } from "@/module/auth/types";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/store/authStore";
 import { zodResolver } from "@hookform/resolvers/zod";

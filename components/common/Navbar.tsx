@@ -5,7 +5,21 @@ import Link from "next/link";
 import { routes } from "@/config/routes";
 import { useLogout } from "@/module/auth/hooks/useAuth";
 import { useRouter } from "next/navigation";
-
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  NavigationMenu,
+  NavigationMenuList,
+  NavigationMenuItem,
+} from "@/components/ui/navigation-menu";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Menu } from "lucide-react";
 const Navbar = () => {
   const { user, userIsLoading, storeLogout } = useAuth((state) => state);
   const router = useRouter();
@@ -17,85 +31,63 @@ const Navbar = () => {
   };
   return (
     <>
-      <div className="navbar bg-base-100 shadow-lg">
-        <div className="navbar-start">
-          <div className="dropdown">
-            <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4 6h16M4 12h8m-8 6h16"
-                />
-              </svg>
-            </div>
-            <ul className="menu menu-sm dropdown-content mt-3 z-1 p-2 shadow bg-base-100 rounded-box w-52">
-              <li>
-                <a>Home</a>
-              </li>
-              <li>
-                <a>About</a>
-              </li>
-              <li>
-                <a>Services</a>
-              </li>
-              <li>
-                <a>Contact</a>
-              </li>
-            </ul>
-          </div>
-          <Link href={routes.feed} className="btn btn-ghost text-xl">
-            Devtinder
-          </Link>
-        </div>
+      <header className="border-b bg-background shadow-sm">
+        <div className="container mx-auto flex h-16 items-center justify-between px-4">
+          <div className="flex items-center gap-6">
+            <Button variant="ghost" size="icon" className="lg:hidden">
+              <Menu className="h-5 w-5" />
+            </Button>
 
-        <div className="navbar-end">
-          <div className="dropdown dropdown-end">
+            <Link
+              href={routes.feed}
+              className="text-xl font-bold tracking-tight"
+            >
+              Devtinder
+            </Link>
+          </div>
+
+          <div>
             {userIsLoading ? (
               <CommonLoader />
-            ) : !userIsLoading && user ? (
-              <div
-                tabIndex={0}
-                role="button"
-                className="flex items-center gap-4 cursor-pointer px-3 py-2 "
-              >
-                <span className="hidden md:inline-block font-medium">
-                  Welcome, {user?.firstName}
-                </span>
-                <div className="avatar">
-                  <div className="w-10 rounded-full ring-2 ring-primary ring-offset-2">
-                    <img src={user?.photoUrl} alt="User profile" />
+            ) : user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <div className="flex items-center gap-3 cursor-pointer">
+                    <span className="hidden md:block font-medium">
+                      Welcome, {user.firstName}
+                    </span>
+                    <Avatar className="h-9 w-9 ring-2 ring-primary/30">
+                      <AvatarImage src={user.photoUrl} />
+                      <AvatarFallback>{user.firstName?.[0]}</AvatarFallback>
+                    </Avatar>
                   </div>
-                </div>
-              </div>
-            ) : null}
+                </DropdownMenuTrigger>
 
-            <ul
-              tabIndex={0}
-              className="menu menu-sm dropdown-content mt-3  p-2 shadow bg-base-100 rounded-box w-52"
-            >
-              <li>
-                <Link href={routes.profile}>Profile</Link>
-              </li>
-              <li>
-                <a>Settings</a>
-              </li>
-              <li className="border-t border-base-300 mt-2 pt-2">
-                <div onClick={handleLogout} className="text-error">
-                  Logout
-                </div>
-              </li>
-            </ul>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem asChild>
+                    <Link href={routes.profile}>Profile</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href={routes.connections}>Connections</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href={routes.requests}>Requests</Link>
+                  </DropdownMenuItem>
+
+                  <DropdownMenuSeparator />
+
+                  <DropdownMenuItem
+                    onClick={handleLogout}
+                    className="text-red-500 focus:text-red-500"
+                  >
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : null}
           </div>
         </div>
-      </div>
+      </header>
     </>
   );
 };

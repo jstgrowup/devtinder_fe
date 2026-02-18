@@ -1,9 +1,12 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api";
-import { CommonResponse } from "@/types";
+import { BaseResponse, CommonResponse } from "@/types";
 import { IUser } from "@/module/auth/types";
+import { REQUEST_STATUS } from "../types";
 
-const API_USER = `/user`;
+export const API_USER = `/user`;
+const API_REQUEST = `/request`;
+
 const useFeed = (options = {}) => {
   return useQuery({
     queryKey: ["feed"],
@@ -16,5 +19,21 @@ const useFeed = (options = {}) => {
     ...options,
   });
 };
-
-export { useFeed };
+const useSendConnectionRequest = () => {
+  return useMutation({
+    mutationFn: async ({
+      status,
+      toUserId,
+    }: {
+      status: REQUEST_STATUS;
+      toUserId: string;
+    }) => {
+      const response = await apiClient.post<BaseResponse>(
+        `${API_REQUEST}/send/${status}/${toUserId}`,
+        {},
+      );
+      return response.data;
+    },
+  });
+};
+export { useFeed, useSendConnectionRequest };
