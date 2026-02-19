@@ -1,0 +1,31 @@
+name: Production
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source
+        uses: actions/checkout@v4
+      - name: Create .env file
+        run: echo "NEXT_PUBLIC_API_URL=${{secrets.NEXT_PUBLIC_API_URL}}" >> .env
+      - name: Build docker image
+        run: docker build -t jstgrwup/devtinder .
+      - name: Login to docker hub
+        run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
+      - name: Publish image to docker hub
+        run: docker push jstgrwup/devtinder:latest
+  deploy:
+    needs: build
+    runs-on: self-hosted
+    steps:
+      - name: Pull image from docker hub
+        run: docker pull jstgrwup/devtinder:latest
+      - name: Delete old container
+        run: docker rm -f jstgrwup/devtinder
+      - name: Run docker container
+        run: docker run -d -p 3000:3000 --name devtiner-app-container jstgrwup/devtinder
