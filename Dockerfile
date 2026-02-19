@@ -1,8 +1,8 @@
-FROM node:20-alpine3.18 as buidler
+FROM node:20-alpine3.18 AS buidler
 
 WORKDIR /app
 COPY package*.json ./
-RUN npm install --production
+RUN npm install 
 COPY . .
 RUN npm run build
 EXPOSE 3000
