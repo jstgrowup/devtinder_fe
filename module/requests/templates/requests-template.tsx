@@ -9,7 +9,7 @@ import {
 import { openErrorToast, openSuccessToast } from "@/components/common/toast";
 import DataEmptyHandler from "@/components/common/common-data-empty-handler";
 import { IConnectionRequests } from "../types";
-import { CommonLoader } from "@/components/common/loader";
+import { CommonLoader } from "@/components/common/Loader";
 
 const RequestTemplate = () => {
   const {

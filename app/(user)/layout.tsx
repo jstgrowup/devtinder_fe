@@ -3,8 +3,9 @@ import { useAuth } from "@/store/authStore";
 import { useEffect } from "react";
 
 import { useGetProfile } from "@/module/profile/hooks/useProfile";
-import Navbar from "@/components/common/navbar";
-import Footer from "@/components/common/footer";
+import Navbar from "@/components/common/Navbar";
+import Footer from "@/components/common/Footer";
+
 function AuthWrapper({ children }: { children: React.ReactNode }) {
   const { data, isLoading } = useGetProfile();
 

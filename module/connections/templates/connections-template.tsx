@@ -2,7 +2,7 @@
 
 import { ActionUserCard } from "@/module/requests/components/action-user-card";
 import { useGetConnections } from "../hooks/useConnections";
-import { CommonLoader } from "@/components/common/loader";
+import { CommonLoader } from "@/components/common/Loader";
 import DataEmptyHandler from "@/components/common/common-data-empty-handler";
 import { IConnections } from "../types";
 

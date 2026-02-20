@@ -1,5 +1,5 @@
 "use client";
-import { CommonLoader } from "@/components/common/loader";
+import { CommonLoader } from "@/components/common/Loader";
 import UserCard from "../components/user-cards";
 import { useFeed, useSendConnectionRequest } from "../hooks/useFeed";
 import { openErrorToast, openSuccessToast } from "@/components/common/toast";
