@@ -11,21 +11,33 @@ jobs:
     steps:
       - name: Checkout Source
         uses: actions/checkout@v4
+
       - name: Login to docker hub
-        run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
       - name: Build docker image
-        run: docker build -t jstgrwup/devtinder --build-arg NEXT_PUBLIC_NODE_ENV='production' --build-arg NEXT_PUBLIC_API_URL='${{secrets.NEXT_PUBLIC_API_URL}}' .
+        run: |
+          docker build \
+            -t jstgrwup/devtinder:latest \
+            --build-arg NEXT_PUBLIC_NODE_ENV=production \
+            --build-arg NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }} \
+            .
+
       - name: Publish image to docker hub
         run: docker push jstgrwup/devtinder:latest
+
   deploy:
     needs: build
     runs-on: self-hosted
     steps:
       - name: Clean old docker images
         run: docker system prune -a -f
+
       - name: Pull image from docker hub
         run: docker pull jstgrwup/devtinder:latest
+
       - name: Delete old container
-        run: docker rm -f jstgrwup/devtinder
+        run: docker rm -f devtiner-app-container || true
+
       - name: Run docker container
-        run: docker run -d -p 3000:3000 --name devtiner-app-container jstgrwup/devtinder
+        run: docker run -d -p 3000:3000 --name devtiner-app-container jstgrwup/devtinder:latest

@@ -1,22 +1,32 @@
-FROM node:20-alpine3.18 AS build
-# Declare build time enviroment variables
-ARG NEXT_PUBLIC_NODE_ENV
-ARG NEXT_PUBLIC_API_URL
-# set default values for enviroment variable
-ENV NEXT_PUBLIC_NODE_ENV=$NEXT_PUBLIC_NODE_ENV
-ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+# -------- Build Stage --------
+FROM node:20-alpine AS build
 
-# BUild App
 WORKDIR /app
-COPY package*.json .
-RUN npm install 
+
+# Install dependencies
+COPY package*.json ./
+RUN npm install
+
+# Copy source code
 COPY . .
+
+# Build the Next.js app
 RUN npm run build
 
-#Serve with Nginx
-FROM nginx:1.23-alpine
-WORKDIR /usr/share/nginx/html
-RUN rm -rf *
-COPY --from=build /app/build .
+
+# -------- Production Stage --------
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copy only necessary files from build stage
+COPY --from=build /app/package*.json ./
+RUN npm install --omit=dev
+
+COPY --from=build /app/.next ./.next
+COPY --from=build /app/public ./public
+COPY --from=build /app/node_modules ./node_modules
+
 EXPOSE 3000
-ENTRYPOINT [ "nginx","-g","daemon off;" ] 
+
+CMD ["npm", "start"]
