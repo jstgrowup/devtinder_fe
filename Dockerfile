@@ -13,10 +13,10 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-#Serve with Ngnix
-FROM ngnix:1.23-alpine
-WORKDIR /usr/share/ngnix/html
+#Serve with Nginx
+FROM nginx:1.23-alpine
+WORKDIR /usr/share/nginx/html
 RUN rm -rf *
 COPY --from=build /app/build .
 EXPOSE 3000
-ENTRYPOINT [ "ngnix","-g","daemon off;" ] 
+ENTRYPOINT [ "nginx","-g","daemon off;" ] 
