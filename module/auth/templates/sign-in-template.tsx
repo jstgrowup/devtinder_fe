@@ -23,6 +23,8 @@ import { Loader2 } from "lucide-react";
 
 const LoginTemplate = () => {
   const router = useRouter();
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  console.log("apiUrl:", apiUrl);
   const form = useForm<LoginSchemaType>({ resolver: zodResolver(zLogin) });
   const { mutate: login, isPending } = useLogin();
   const setUser = useAuth((state) => state.setUser);
