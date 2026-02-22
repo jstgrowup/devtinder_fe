@@ -22,8 +22,8 @@ const Navbar = () => {
   const { mutate: logout } = useLogout();
   const handleLogout = () => {
     logout();
-    router.push(routes.login);
     storeLogout();
+    return router.push(routes.login);
   };
   return (
     <>
