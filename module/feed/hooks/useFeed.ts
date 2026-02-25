@@ -6,17 +6,19 @@ import { REQUEST_STATUS } from "../types";
 
 export const API_USER = `/user`;
 export const API_REQUEST = `/request`;
-
-const useFeed = (options = {}) => {
+export interface PaginatedQuery {
+  page?: number;
+  limit?: number;
+}
+const useFeed = (query: PaginatedQuery) => {
   return useQuery({
-    queryKey: ["feed"],
+    queryKey: ["feed", query.limit, query.page],
     queryFn: async () => {
       const response = await apiClient.get<CommonResponse<IUser[]>>(
-        `${API_USER}/feed`,
+        `${API_USER}/feed?limit=${query.limit}`,
       );
       return response.data;
     },
-    ...options,
   });
 };
 const useSendConnectionRequest = () => {

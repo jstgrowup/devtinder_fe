@@ -23,7 +23,10 @@ import { useAuth } from "@/store/authStore";
 const SignUpTemplate = () => {
   const router = useRouter();
   const setUser = useAuth((state) => state.setUser);
-  const form = useForm<SignupSchemaType>({ resolver: zodResolver(zSignUp) });
+  const form = useForm<SignupSchemaType>({
+    resolver: zodResolver(zSignUp),
+    mode: "onChange",
+  });
   const { mutate: signup, isPending } = useSignup();
   const onSubmit = (payload: SignupSchemaType) => {
     signup(payload, {

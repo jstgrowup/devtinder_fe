@@ -11,6 +11,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { REQUEST_STATUS } from "../types";
+import { Loader2 } from "lucide-react";
 interface IUserCardProp extends IUser {
   handleAcceptOrReject: ({
     status,
@@ -19,6 +20,7 @@ interface IUserCardProp extends IUser {
     status: REQUEST_STATUS;
     toUserId: string;
   }) => void;
+  actionLoading: REQUEST_STATUS | null;
 }
 
 const UserCard: React.FC<IUserCardProp> = ({
@@ -30,6 +32,7 @@ const UserCard: React.FC<IUserCardProp> = ({
   gender,
   _id,
   handleAcceptOrReject,
+  actionLoading,
 }) => {
   return (
     <Card className="w-87.5 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300">
@@ -62,6 +65,7 @@ const UserCard: React.FC<IUserCardProp> = ({
         <Button
           variant="secondary"
           className="flex-1 cursor-pointer"
+          disabled={actionLoading !== null}
           onClick={() =>
             handleAcceptOrReject({
               status: REQUEST_STATUS.IGNORE,
@@ -69,10 +73,14 @@ const UserCard: React.FC<IUserCardProp> = ({
             })
           }
         >
+          {actionLoading === REQUEST_STATUS.IGNORE && (
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          )}
           Ignore
         </Button>
         <Button
           className="flex-1 cursor-pointer"
+          disabled={actionLoading !== null}
           onClick={() =>
             handleAcceptOrReject({
               status: REQUEST_STATUS.INTERESTED,
@@ -80,6 +88,9 @@ const UserCard: React.FC<IUserCardProp> = ({
             })
           }
         >
+          {actionLoading === REQUEST_STATUS.INTERESTED && (
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          )}
           Interested
         </Button>
       </CardFooter>
