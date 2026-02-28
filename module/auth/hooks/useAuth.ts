@@ -1,26 +1,26 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { LoginSchemaType, SignupSchemaType } from "../utils/zod";
 import { apiClient } from "@/lib/api";
-import { BaseResponse, CommonResponse } from "@/types";
+import { CommonReqBody, CommonResponse, CommonResponseNew } from "@/types";
 import { IUser } from "../types";
 
-const API_AUTH = `/auth`;
 const useLogin = () => {
   return useMutation({
-    mutationFn: async (body: LoginSchemaType) => {
-      const response = await apiClient.post<CommonResponse<IUser>>(
-        `${API_AUTH}/login`,
+    mutationFn: async (body: CommonReqBody<LoginSchemaType>) => {
+      const response = await apiClient.post<CommonResponseNew<IUser>>(
+        `${process.env.NEXT_PUBLIC_BASE_API}`,
         body,
       );
       return response.data;
     },
   });
 };
+
 const useSignup = () => {
   return useMutation({
-    mutationFn: async (body: SignupSchemaType) => {
-      const response = await apiClient.post<CommonResponse<IUser>>(
-        `${API_AUTH}/signup`,
+    mutationFn: async (body: CommonReqBody<SignupSchemaType>) => {
+      const response = await apiClient.post<CommonResponseNew<IUser>>(
+        `${process.env.NEXT_PUBLIC_BASE_API}`,
         body,
       );
       return response.data;
@@ -32,7 +32,7 @@ const useLogout = () => {
   return useMutation({
     mutationFn: async () => {
       const response = await apiClient.post<CommonResponse<IUser>>(
-        `${API_AUTH}/logout`,
+        `${process.env.NEXT_PUBLIC_BASE_API}/logout`,
       );
       return response.data;
     },

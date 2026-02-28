@@ -1,20 +1,17 @@
 import { apiClient } from "@/lib/api";
-import { CommonResponse } from "@/types";
-import { useQuery } from "@tanstack/react-query";
+import { CommonResponseNew } from "@/types";
+import { useMutation } from "@tanstack/react-query";
 import { IConnections } from "../types";
 
-const API_USER = "/user";
-
-const useGetConnections = (options = {}) => {
-  return useQuery({
-    queryKey: ["user-connections"],
-    queryFn: async () => {
-      const response = await apiClient.get<CommonResponse<IConnections[]>>(
-        `${API_USER}/requests/connections`,
+const useGetConnections = () => {
+  return useMutation({
+    mutationFn: async (body: {}) => {
+      const response = await apiClient.post<CommonResponseNew<IConnections[]>>(
+        `${process.env.NEXT_PUBLIC_BASE_API}`,
+        body,
       );
       return response.data;
     },
-    ...options,
   });
 };
 export { useGetConnections };

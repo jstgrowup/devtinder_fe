@@ -20,6 +20,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
+import { NAMESPACES } from "@/types";
 
 const LoginTemplate = () => {
   const router = useRouter();
@@ -30,16 +31,19 @@ const LoginTemplate = () => {
   const { mutate: login, isPending } = useLogin();
   const setUser = useAuth((state) => state.setUser);
   const onSubmit = (payload: LoginSchemaType) => {
-    login(payload, {
-      onSuccess: (response) => {
-        setUser(response.data);
-        openSuccessToast({ message: response.message });
-        router.push(routes.feed);
+    login(
+      { namespace: NAMESPACES.AUTH, data: payload, apiName: "login" },
+      {
+        onSuccess: (response) => {
+          setUser(response.data.data);
+          openSuccessToast({ message: response.data.message });
+          router.push(routes.feed);
+        },
+        onError: (error) => {
+          openErrorToast({ error });
+        },
       },
-      onError: (error) => {
-        openErrorToast({ error });
-      },
-    });
+    );
   };
 
   return (
