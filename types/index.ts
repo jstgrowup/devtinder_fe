@@ -4,8 +4,8 @@ export interface CommonResponse<T> {
   data: T;
 }
 export interface ClientResponse<T> {
-  message: string;
-  data: T;
+  message?: string;
+  data?: T;
 }
 export interface CommonResponseNew<T> {
   status: COMMON_RESPONSE_STATUS;

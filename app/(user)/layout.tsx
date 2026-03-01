@@ -6,16 +6,16 @@ import Navbar from "@/components/common/Navbar";
 import Footer from "@/components/common/Footer";
 
 function AuthWrapper({ children }: { children: React.ReactNode }) {
-  const { data: response, isLoading } = useGetProfile();
+  const { data: response, isPending } = useGetProfile();
 
   const { setUser, setUserLoading } = useAuth((state) => state);
 
   useEffect(() => {
     if (response?.data) {
-      setUser(response.data);
+      setUser(response?.data);
     }
-    setUserLoading(isLoading);
-  }, [response, isLoading]);
+    setUserLoading(isPending);
+  }, [response?.data, isPending]);
 
   return <>{children}</>;
 }
