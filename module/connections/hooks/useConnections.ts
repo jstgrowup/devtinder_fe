@@ -1,16 +1,17 @@
 import { apiClient } from "@/lib/api";
-import { CommonResponseNew } from "@/types";
-import { useMutation } from "@tanstack/react-query";
+import { NAMESPACES } from "@/types";
+import { useQuery } from "@tanstack/react-query";
 import { IConnections } from "../types";
 
 const useGetConnections = () => {
-  return useMutation({
-    mutationFn: async (body: {}) => {
-      const response = await apiClient.post<CommonResponseNew<IConnections[]>>(
-        `${process.env.NEXT_PUBLIC_BASE_API}`,
-        body,
-      );
-      return response.data;
+  return useQuery({
+    queryKey: ["interested-connections"],
+    queryFn: async (body: {}) => {
+      return await apiClient.post<IConnections[], any>({
+        namespace: NAMESPACES.USER,
+        data: body,
+        apiName: "interested-connections",
+      });
     },
   });
 };

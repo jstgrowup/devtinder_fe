@@ -1,36 +1,32 @@
 import { apiClient } from "@/lib/api";
-import { BaseResponse, CommonResponse } from "@/types";
+import { BaseResponse, NAMESPACES } from "@/types";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { IUser } from "@/module/auth/types";
-import { API_REQUEST, API_USER } from "@/module/feed/hooks/useFeed";
 import { IConnectionRequests } from "../types";
 import { REQUEST_STATUS } from "@/module/feed/types";
 
-const useGetRequests = (options = {}) => {
+const useGetRequests = () => {
   return useQuery({
-    queryKey: ["requests"],
-    queryFn: async () => {
-      const response = await apiClient.get<
-        CommonResponse<IConnectionRequests[]>
-      >(`${API_USER}/requests/interested`);
-      return response.data;
+    queryKey: ["interested-requests"],
+    queryFn: async (body: {}) => {
+      return await apiClient.post<IConnectionRequests[], {}>({
+        namespace: NAMESPACES.USER,
+        apiName: "interested-requests",
+        data: body,
+      });
     },
-    ...options,
   });
 };
+
 const useReviewConnectionRequest = () => {
   return useMutation({
-    mutationFn: async ({
-      status,
-      requestId,
-    }: {
-      status: REQUEST_STATUS;
-      requestId: string;
-    }) => {
-      const response = await apiClient.post<BaseResponse>(
-        `${API_REQUEST}/review/${status}/${requestId}`,
-        {},
-      );
+    mutationFn: async (body: { status: REQUEST_STATUS; requestId: string }) => {
+      const response = await apiClient.post<
+        BaseResponse,
+        {
+          status: REQUEST_STATUS;
+          requestId: string;
+        }
+      >({ namespace: NAMESPACES.REQUESTS, apiName: "review", data: body });
       return response.data;
     },
   });

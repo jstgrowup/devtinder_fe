@@ -23,7 +23,7 @@ const ProfileTemplate = () => {
   const handleEditSubmit = (payload: EditProfileSchemaType) => {
     editProfile(payload, {
       onSuccess: async (response) => {
-        openSuccessToast({ message: response.message });
+        openSuccessToast({ message: response.data.message });
         const updatedProfile: CommonResponse<IUser> =
           await queryClient.fetchQuery({
             queryKey: ["me"],

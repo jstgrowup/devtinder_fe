@@ -10,13 +10,13 @@ import { openErrorToast, openSuccessToast } from "@/components/common/toast";
 import DataEmptyHandler from "@/components/common/common-data-empty-handler";
 import { IConnectionRequests } from "../types";
 import { CommonLoader } from "@/components/common/Loader";
+import { useQueryClient } from "@tanstack/react-query";
 
 const RequestTemplate = () => {
-  const {
-    data: userRequests,
-    refetch: refetchRequests,
-    isPending: isRequestsPending,
-  } = useGetRequests();
+  const { data: response, isPending: isRequestsPending } = useGetRequests();
+
+  const queryClient = useQueryClient();
+
   const { mutate: reviewConnectionRequest } = useReviewConnectionRequest();
 
   const handleReviewRequest = ({
@@ -31,10 +31,12 @@ const RequestTemplate = () => {
       {
         onSuccess: async (response) => {
           openSuccessToast({ message: response.message });
-          await refetchRequests();
+          await queryClient.fetchQuery({
+            queryKey: ["interested-requests"],
+          });
         },
         onError: (error) => {
-          openErrorToast({ error });
+          openErrorToast({ message: error.message });
         },
       },
     );
@@ -47,10 +49,10 @@ const RequestTemplate = () => {
   return (
     <>
       <DataEmptyHandler<IConnectionRequests>
-        data={userRequests?.data}
+        data={response?.data}
         emptyMessage="No requests available"
       >
-        {userRequests?.data.map((request) => (
+        {response?.data.map((request) => (
           <ActionUserCard
             key={request._id}
             connectionRequestId={request._id}

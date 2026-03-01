@@ -1,45 +1,33 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api";
-import { BaseResponse, CommonResponse, PaginatedQuery } from "@/types";
+import { BaseResponse, NAMESPACES, PaginatedQuery } from "@/types";
 import { IUser } from "@/module/auth/types";
 import { REQUEST_STATUS } from "../types";
 
-export const API_USER = `/user`;
-export const API_REQUEST = `/request`;
-
-const useFeed = (
-  query: PaginatedQuery,
-  options?: { initialData?: CommonResponse<IUser[]> },
-) => {
-  return useQuery({
-    queryKey: ["feed", query.limit, query.page],
-    queryFn: async () => {
-      const response = await apiClient.get<CommonResponse<IUser[]>>(
-        `${API_USER}/feed?limit=${query.limit}`,
-      );
-      return response.data;
+const useFeed = () => {
+  return useMutation({
+    mutationFn: async (body: PaginatedQuery) => {
+      return await apiClient.post<IUser[], PaginatedQuery>({
+        namespace: NAMESPACES.USER,
+        data: body,
+        apiName: "feed",
+      });
     },
-    // Start with this data instead of calling the API immediately.
-    initialData: options?.initialData,
-    // Consider this data fresh for 1 minute. otherwise Data becomes stale immediately
-    staleTime: 1000 * 60,
   });
 };
+
 const useSendConnectionRequest = () => {
   return useMutation({
-    mutationFn: async ({
-      status,
-      toUserId,
-    }: {
-      status: REQUEST_STATUS;
-      toUserId: string;
-    }) => {
-      const response = await apiClient.post<BaseResponse>(
-        `${API_REQUEST}/send/${status}/${toUserId}`,
-        {},
-      );
-      return response.data;
+    mutationFn: async (body: { status: REQUEST_STATUS; toUserId: string }) => {
+      return await apiClient.post<
+        BaseResponse,
+        { status: REQUEST_STATUS; toUserId: string }
+      >({
+        namespace: NAMESPACES.REQUESTS,
+        data: body,
+        apiName: "send",
+      });
     },
   });
 };
-export { useFeed, useSendConnectionRequest };
+export { useSendConnectionRequest, useFeed };

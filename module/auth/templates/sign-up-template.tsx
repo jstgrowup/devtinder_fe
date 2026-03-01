@@ -20,7 +20,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/store/authStore";
-import { NAMESPACES } from "@/types";
 const SignUpTemplate = () => {
   const router = useRouter();
   const setUser = useAuth((state) => state.setUser);
@@ -31,15 +30,13 @@ const SignUpTemplate = () => {
   const { mutate: signup, isPending } = useSignup();
   const onSubmit = (payload: SignupSchemaType) => {
     signup(
-      { namespace: NAMESPACES.AUTH, apiName: "signup", data: payload },
+      payload,
+
       {
         onSuccess: (response) => {
-          setUser(response.data.data);
-          openSuccessToast({ message: response.data.message });
+          setUser(response.data);
+          openSuccessToast({ message: response.message });
           router.push(routes.profile);
-        },
-        onError: (error) => {
-          openErrorToast({ error });
         },
       },
     );

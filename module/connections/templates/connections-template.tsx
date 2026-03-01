@@ -1,30 +1,12 @@
 "use client";
-
 import { ActionUserCard } from "@/module/requests/components/action-user-card";
 import { useGetConnections } from "../hooks/useConnections";
 import { CommonLoader } from "@/components/common/Loader";
 import DataEmptyHandler from "@/components/common/common-data-empty-handler";
 import { IConnections } from "../types";
-import { useEffect, useState } from "react";
-import { NAMESPACES } from "@/types";
 
 const ConnectionsTemplate = () => {
-  const { mutate: getConnections, isPending } = useGetConnections();
-  const [connections, setConnections] = useState<IConnections[]>([]);
-  useEffect(() => {
-    getConnections(
-      {
-        namespace: NAMESPACES.USER,
-        data: {},
-        apiName: "interested-connections",
-      },
-      {
-        onSuccess: (response) => {
-          setConnections(response.data.data);
-        },
-      },
-    );
-  }, []);
+  const { data: response, isPending } = useGetConnections();
 
   if (isPending) {
     return <CommonLoader fullScreen={true} />;
@@ -32,10 +14,10 @@ const ConnectionsTemplate = () => {
   return (
     <>
       <DataEmptyHandler<IConnections>
-        data={connections}
+        data={response?.data}
         emptyMessage="No connections available"
       >
-        {connections?.map((request) => (
+        {response?.data?.map((request) => (
           <ActionUserCard
             key={request._id}
             connectionRequestId={request._id}

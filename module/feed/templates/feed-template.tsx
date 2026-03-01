@@ -4,19 +4,28 @@ import UserCard from "../components/user-cards";
 import { useFeed, useSendConnectionRequest } from "../hooks/useFeed";
 import { openErrorToast, openSuccessToast } from "@/components/common/toast";
 import { REQUEST_STATUS } from "../types";
-import React, { useState } from "react";
-import { CommonResponse } from "@/types";
+import { useEffect, useState } from "react";
 import { IUser } from "@/module/auth/types";
 
-const FeedTemplate: React.FC<{ initialData: CommonResponse<IUser[]> }> = ({
-  initialData,
-}) => {
-  const {
-    data: feedUsers,
-    isLoading,
-    refetch: feedRefetch,
-    isFetching,
-  } = useFeed({ limit: 4 }, { initialData });
+const FeedTemplate = () => {
+  const [feedUsers, setFeedUsers] = useState<IUser[]>([]);
+
+  const { mutate: getFeedUsers, isPending } = useFeed();
+
+  useEffect(() => {
+    getFeedUsers(
+      { limit: 4 },
+      {
+        onSuccess: (response) => {
+          setFeedUsers(response.data);
+        },
+        onError: (error) => {
+          openErrorToast({ message: error.message });
+        },
+      },
+    );
+  }, []);
+
   const { mutate: sendConnectionRequest } = useSendConnectionRequest();
   // For controlling the index of the current user
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -24,11 +33,11 @@ const FeedTemplate: React.FC<{ initialData: CommonResponse<IUser[]> }> = ({
   const [actionLoading, setActionLoading] = useState<REQUEST_STATUS | null>(
     null,
   );
-  const users = feedUsers?.data || [];
+  const users = feedUsers || [];
   // The current cowed profile ready to be accepted/rejected
   const currentUser = users[currentIndex];
 
-  if (isLoading) {
+  if (isPending) {
     return <CommonLoader fullScreen={true} />;
   }
   // Function to control the swiping
@@ -41,9 +50,19 @@ const FeedTemplate: React.FC<{ initialData: CommonResponse<IUser[]> }> = ({
       setCurrentIndex(nextIndex);
     } else {
       // If there is no user left to swipe we call the api to get the next set of users
-      const response = await feedRefetch();
+      getFeedUsers(
+        { limit: 4 },
+        {
+          onSuccess: (response) => {
+            setFeedUsers(response.data);
+          },
+          onError: (error) => {
+            openErrorToast({ message: error.message });
+          },
+        },
+      );
 
-      if (response.data?.data?.length) {
+      if (feedUsers?.length) {
         // If the user has swiped all the users and no user left for him/her to swipe
         setCurrentIndex(0);
       }
@@ -65,7 +84,7 @@ const FeedTemplate: React.FC<{ initialData: CommonResponse<IUser[]> }> = ({
       },
       {
         onSuccess: async (response) => {
-          openSuccessToast({ message: response.message });
+          openSuccessToast({ message: response.data.message });
           setActionLoading(null);
           // After refetch call the we cna update the current index and that will update the current user
           goToNextUser();
@@ -86,7 +105,7 @@ const FeedTemplate: React.FC<{ initialData: CommonResponse<IUser[]> }> = ({
           handleAcceptOrReject={handleAcceptOrReject}
           actionLoading={actionLoading}
         />
-      ) : isFetching ? (
+      ) : isPending ? (
         <CommonLoader />
       ) : (
         <p className="text-gray-500 text-lg">No more users 🎉</p>
