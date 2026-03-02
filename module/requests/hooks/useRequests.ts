@@ -1,7 +1,7 @@
 import { apiClient } from "@/lib/api";
 import { BaseResponse, NAMESPACES } from "@/types";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { IConnectionRequests } from "../types";
+import { IConnectionRequests, IPaymentReq, IPaymentResponse } from "../types";
 import { REQUEST_STATUS } from "@/module/feed/types";
 
 const useGetRequests = () => {
@@ -31,4 +31,16 @@ const useReviewConnectionRequest = () => {
     },
   });
 };
-export { useGetRequests, useReviewConnectionRequest };
+const useCreateOrder = () => {
+  return useMutation({
+    mutationFn: async (body: IPaymentReq) => {
+      const response = await apiClient.post<IPaymentResponse, IPaymentReq>({
+        namespace: NAMESPACES.PAYMENT,
+        apiName: "create",
+        data: body,
+      });
+      return response.data;
+    },
+  });
+};
+export { useGetRequests, useReviewConnectionRequest, useCreateOrder };

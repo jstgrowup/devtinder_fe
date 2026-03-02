@@ -32,4 +32,9 @@ export enum NAMESPACES {
   PROFILE = "profile",
   USER = "user",
   REQUESTS = "requests",
+  PAYMENT = "payment",
+}
+export enum SUBSCRIPTION_PLANS {
+  BASE = "base",
+  SUPER_BOOST = "super-boost",
 }
