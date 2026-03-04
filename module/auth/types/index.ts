@@ -9,4 +9,5 @@ export interface IUser {
   about: string;
   photoUrl: string;
   skills: string[];
+  isPremiumUser: boolean;
 }

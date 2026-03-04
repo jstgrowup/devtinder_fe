@@ -4,6 +4,7 @@ import { useGetConnections } from "../hooks/useConnections";
 import { CommonLoader } from "@/components/common/Loader";
 import DataEmptyHandler from "@/components/common/common-data-empty-handler";
 import { IConnections } from "../types";
+import { IUser } from "@/module/auth/types";
 
 const ConnectionsTemplate = () => {
   const { data: response, isPending } = useGetConnections();
@@ -13,7 +14,7 @@ const ConnectionsTemplate = () => {
   }
   return (
     <>
-      <DataEmptyHandler<IConnections>
+      <DataEmptyHandler<IUser>
         data={response?.data}
         emptyMessage="No connections available"
       >
@@ -21,12 +22,13 @@ const ConnectionsTemplate = () => {
           <ActionUserCard
             key={request._id}
             connectionRequestId={request._id}
-            name={request.fromUserId.firstName}
-            about={request.fromUserId.about}
-            photoUrl={request.fromUserId.photoUrl}
-            age={request.fromUserId.age}
-            gender={request.fromUserId.gender}
+            name={request.firstName}
+            about={request.about}
+            photoUrl={request.photoUrl}
+            age={request.age}
+            gender={request.gender}
             actionsAllowed={false}
+            toUserId={request._id}
           />
         ))}
       </DataEmptyHandler>

@@ -1,18 +1,12 @@
 import React from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { IPaymentReq } from "../types";
 import CommonButton from "@/components/common/button";
 import { SUBSCRIPTION_PLANS } from "@/types";
+import CommonModal from "@/components/common/common-modal";
 interface EditProfileModalProps {
   onCreateOrder: (body: IPaymentReq) => void;
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  isLoading: boolean;
 }
 const SubscriptionModal: React.FC<EditProfileModalProps> = ({
   open,
@@ -20,26 +14,19 @@ const SubscriptionModal: React.FC<EditProfileModalProps> = ({
   onCreateOrder,
 }) => {
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="sm:max-w-lg">
-        <DialogHeader>
-          <DialogTitle>Subscription Plans</DialogTitle>
-        </DialogHeader>
-        {/* Content here  */}
-        <CommonButton
-          onClick={() => onCreateOrder({ plan: SUBSCRIPTION_PLANS.BASE })}
-        >
-          <p>Base</p>
-        </CommonButton>
-        <CommonButton
-          onClick={() =>
-            onCreateOrder({ plan: SUBSCRIPTION_PLANS.SUPER_BOOST })
-          }
-        >
-          <p>Super boost</p>
-        </CommonButton>
-      </DialogContent>
-    </Dialog>
+    <CommonModal open={open} setOpen={setOpen} title="Subscription Plans">
+      <CommonButton
+        onClick={() => onCreateOrder({ plan: SUBSCRIPTION_PLANS.BASE })}
+      >
+        Base
+      </CommonButton>
+
+      <CommonButton
+        onClick={() => onCreateOrder({ plan: SUBSCRIPTION_PLANS.SUPER_BOOST })}
+      >
+        Super Boost
+      </CommonButton>
+    </CommonModal>
   );
 };
 

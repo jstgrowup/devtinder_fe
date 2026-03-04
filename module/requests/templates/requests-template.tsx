@@ -30,7 +30,7 @@ const RequestTemplate = () => {
       { status, requestId },
       {
         onSuccess: async (response) => {
-          openSuccessToast({ message: response.message });
+          openSuccessToast({ message: response?.message });
           await queryClient.fetchQuery({
             queryKey: ["interested-requests"],
           });
@@ -52,7 +52,7 @@ const RequestTemplate = () => {
         data={response?.data}
         emptyMessage="No requests available"
       >
-        {response?.data.map((request) => (
+        {response?.data?.map((request) => (
           <ActionUserCard
             key={request._id}
             connectionRequestId={request._id}
@@ -62,6 +62,7 @@ const RequestTemplate = () => {
             handleReviewRequest={handleReviewRequest}
             age={request.fromUserId.age}
             gender={request.fromUserId.gender}
+            toUserId={request.fromUserId._id}
           />
         ))}
       </DataEmptyHandler>

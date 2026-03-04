@@ -7,10 +7,18 @@ import { Lock, MessageCircle } from "lucide-react";
 import { useState } from "react";
 import { CommonTooltip } from "@/components/common/tooltip";
 import SubscriptionModal from "./subscription";
-import { useCreateOrder } from "../hooks/useRequests";
+import {
+  useCreateOrder,
+  useCreateZegoRoomId,
+  useCreateZegoToken,
+} from "../hooks/useRequests";
 import { IPaymentReq } from "../types";
+import { useAuth } from "@/store/authStore";
+import ChatAndVc from "./chat";
+import CommonModal from "@/components/common/common-modal";
 
 interface ActionUserCardProps {
+  toUserId: string;
   name: string;
   about: string;
   connectionRequestId: string;
@@ -28,6 +36,7 @@ interface ActionUserCardProps {
 }
 
 export function ActionUserCard({
+  toUserId,
   connectionRequestId,
   age,
   gender,
@@ -37,9 +46,18 @@ export function ActionUserCard({
   handleReviewRequest,
   actionsAllowed = true,
 }: ActionUserCardProps) {
-  const [locked, setlocked] = useState(true);
+  const { user } = useAuth((state) => state);
   const [openEditModal, setOpenEditModal] = useState(false);
+  const [openChatModal, setOpenChatModal] = useState(false);
+
   const { mutate: createOrder, isPending } = useCreateOrder();
+  const { mutate: createZegoRoom, data: roomId } = useCreateZegoRoomId();
+  const {
+    mutate: createZegoToken,
+    data: zegotoken,
+    isPending: zegotokenIsPending,
+  } = useCreateZegoToken();
+
   const handleCreateOrder = (body: IPaymentReq) => {
     createOrder(body, {
       onSuccess: (response) => {
@@ -62,6 +80,11 @@ export function ActionUserCard({
       },
     });
   };
+  const handleOpenChatModal = async (toUserId: string) => {
+    createZegoToken({ toUserId });
+    createZegoRoom({ toUserId });
+    setOpenChatModal(true);
+  };
   return (
     <>
       <SubscriptionModal
@@ -70,8 +93,19 @@ export function ActionUserCard({
         }}
         open={openEditModal}
         setOpen={setOpenEditModal}
-        isLoading={isPending}
       />
+      <CommonModal open={openChatModal} setOpen={setOpenChatModal} title="Chat">
+        {zegotokenIsPending ? (
+          <div className="p-10 text-center">Loading Chat Security Token...</div>
+        ) : (
+          <ChatAndVc
+            roomID={roomId ?? ""}
+            toUserId={toUserId ?? ""}
+            userName={name ?? ""}
+            token={zegotoken ?? ""}
+          />
+        )}
+      </CommonModal>
       <Card className="text-black shadow-lg">
         <CardContent className="flex items-center justify-between p-5">
           <div className="flex items-center gap-4">
@@ -90,7 +124,17 @@ export function ActionUserCard({
             </div>
           </div>
           {!actionsAllowed &&
-            (locked ? (
+            (user?.isPremiumUser ? (
+              <Button
+                variant="default"
+                size="lg"
+                className="flex items-center gap-2 rounded-full px-5 font-medium transition-colors active:scale-95 cursor-pointer"
+                onClick={() => handleOpenChatModal(toUserId)}
+              >
+                <MessageCircle className="h-4 w-4 " />
+                <span className="leading-none">Message</span>
+              </Button>
+            ) : (
               <CommonTooltip
                 content="Subscribe to unlock this feature"
                 side="left"
@@ -105,16 +149,6 @@ export function ActionUserCard({
                   <span className="leading-none">Message</span>
                 </Button>
               </CommonTooltip>
-            ) : (
-              <Button
-                variant="default"
-                size="lg"
-                className="flex items-center gap-2 rounded-full px-5 font-medium transition-colors active:scale-95 cursor-pointer"
-                onClick={() => console.log("chat")}
-              >
-                <MessageCircle className="h-4 w-4 " />
-                <span className="leading-none">Message</span>
-              </Button>
             ))}
           {actionsAllowed && (
             <div className="flex gap-3">

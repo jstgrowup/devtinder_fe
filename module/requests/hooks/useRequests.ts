@@ -1,7 +1,12 @@
 import { apiClient } from "@/lib/api";
 import { BaseResponse, NAMESPACES } from "@/types";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { IConnectionRequests, IPaymentReq, IPaymentResponse } from "../types";
+import {
+  IConnectionRequests,
+  IPaymentReq,
+  IPaymentResponse,
+  IGetStreamRoomIdReq,
+} from "../types";
 import { REQUEST_STATUS } from "@/module/feed/types";
 
 const useGetRequests = () => {
@@ -31,6 +36,7 @@ const useReviewConnectionRequest = () => {
     },
   });
 };
+
 const useCreateOrder = () => {
   return useMutation({
     mutationFn: async (body: IPaymentReq) => {
@@ -43,4 +49,37 @@ const useCreateOrder = () => {
     },
   });
 };
-export { useGetRequests, useReviewConnectionRequest, useCreateOrder };
+
+const useCreateGetStreamRoomId = () => {
+  return useMutation({
+    mutationFn: async (body: IGetStreamRoomIdReq) => {
+      const response = await apiClient.post<string, IGetStreamRoomIdReq>({
+        namespace: NAMESPACES.GET_STREAM,
+        apiName: "create-roomId",
+        data: body,
+      });
+      return response.data;
+    },
+  });
+};
+
+const useCreateGetStreamToken = () => {
+  return useMutation({
+    mutationFn: async (body: {}) => {
+      const response = await apiClient.post<string, any>({
+        namespace: NAMESPACES.GET_STREAM,
+        apiName: "create-token",
+        data: body,
+      });
+      return response.data;
+    },
+  });
+};
+
+export {
+  useGetRequests,
+  useReviewConnectionRequest,
+  useCreateOrder,
+  useCreateGetStreamRoomId as useCreateZegoRoomId,
+  useCreateGetStreamToken as useCreateZegoToken,
+};

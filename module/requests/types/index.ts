@@ -20,3 +20,13 @@ export interface IPaymentResponse {
 export interface IPaymentReq {
   plan: SUBSCRIPTION_PLANS;
 }
+export interface IGetStreamRoomIdReq {
+  toUserId: string;
+}
+export interface IGetStreamRoomIdRes {
+  roomId: string;
+}
+
+export interface IGetStreamCreateTokenRes {
+  roomId: string;
+}

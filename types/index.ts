@@ -33,6 +33,7 @@ export enum NAMESPACES {
   USER = "user",
   REQUESTS = "requests",
   PAYMENT = "payment",
+  GET_STREAM = "get-stream",
 }
 export enum SUBSCRIPTION_PLANS {
   BASE = "base",
