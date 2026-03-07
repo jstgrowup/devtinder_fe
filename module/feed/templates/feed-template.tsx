@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { IUser } from "@/module/auth/types";
 
 const FeedTemplate = () => {
-  const [feedUsers, setFeedUsers] = useState<IUser[]>([]);
+  const [feedUsers, setFeedUsers] = useState<IUser[] | undefined>([]);
 
   const { mutate: getFeedUsers, isPending } = useFeed();
 
@@ -17,7 +17,7 @@ const FeedTemplate = () => {
       { limit: 4 },
       {
         onSuccess: (response) => {
-          setFeedUsers(response.data);
+          setFeedUsers(response);
         },
         onError: (error) => {
           openErrorToast({ message: error.message });
@@ -54,7 +54,7 @@ const FeedTemplate = () => {
         { limit: 4 },
         {
           onSuccess: (response) => {
-            setFeedUsers(response.data);
+            setFeedUsers(response);
           },
           onError: (error) => {
             openErrorToast({ message: error.message });
@@ -84,7 +84,7 @@ const FeedTemplate = () => {
       },
       {
         onSuccess: async (response) => {
-          openSuccessToast({ message: response.data.message });
+          openSuccessToast({ message: response.message });
           setActionLoading(null);
           // After refetch call the we cna update the current index and that will update the current user
           goToNextUser();

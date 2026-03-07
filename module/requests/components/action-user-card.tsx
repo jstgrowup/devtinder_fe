@@ -9,13 +9,16 @@ import { CommonTooltip } from "@/components/common/tooltip";
 import SubscriptionModal from "./subscription";
 import {
   useCreateOrder,
-  useCreateZegoRoomId,
-  useCreateZegoToken,
+  useCreateGetStreamRoomId,
+  useCreateGetStreamToken,
 } from "../hooks/useRequests";
 import { IPaymentReq } from "../types";
 import { useAuth } from "@/store/authStore";
-import ChatAndVc from "./chat";
-import CommonModal from "@/components/common/common-modal";
+import { useChatRoomStore } from "@/store/chat-room-store";
+import { useRouter } from "next/navigation";
+import { routes } from "@/config/routes";
+import streamClient from "@/module/chat/utils/stream";
+import { openErrorToast } from "@/components/common/toast";
 
 interface ActionUserCardProps {
   toUserId: string;
@@ -47,16 +50,13 @@ export function ActionUserCard({
   actionsAllowed = true,
 }: ActionUserCardProps) {
   const { user } = useAuth((state) => state);
+  const router = useRouter();
+  const { setToken, setRoomId, setUserName, setToUserId, resetChatRoom } =
+    useChatRoomStore((state) => state);
   const [openEditModal, setOpenEditModal] = useState(false);
-  const [openChatModal, setOpenChatModal] = useState(false);
-
-  const { mutate: createOrder, isPending } = useCreateOrder();
-  const { mutate: createZegoRoom, data: roomId } = useCreateZegoRoomId();
-  const {
-    mutate: createZegoToken,
-    data: zegotoken,
-    isPending: zegotokenIsPending,
-  } = useCreateZegoToken();
+  const { mutate: createOrder } = useCreateOrder();
+  const { mutate: createGetStreamRoom } = useCreateGetStreamRoomId();
+  const { mutate: createGetStreamToken } = useCreateGetStreamToken();
 
   const handleCreateOrder = (body: IPaymentReq) => {
     createOrder(body, {
@@ -80,11 +80,41 @@ export function ActionUserCard({
       },
     });
   };
-  const handleOpenChatModal = async (toUserId: string) => {
-    createZegoToken({ toUserId });
-    createZegoRoom({ toUserId });
-    setOpenChatModal(true);
+  const syncUser = async (token: string) => {
+    if (streamClient.userID) {
+      return;
+    }
+    try {
+      await streamClient.connectUser(
+        {
+          id: user?._id ?? "",
+          name: user?.firstName,
+          image: user?.photoUrl,
+        },
+        token,
+      );
+    } catch (error) {
+      openErrorToast({ message: `Failed to connect user ${error}` });
+    }
   };
+  const handleChatRedirect = async (toUserId: string) => {
+    resetChatRoom();
+    createGetStreamToken(
+      { toUserId },
+      {
+        onSuccess: async (response) => {
+          setToken(response ?? "");
+          await syncUser(response ?? "");
+          const roomId = [user?._id, toUserId].sort().join("_");
+          setRoomId(roomId ?? "");
+          setToUserId(toUserId);
+          setUserName(name);
+          router.push(routes.chat);
+        },
+      },
+    );
+  };
+
   return (
     <>
       <SubscriptionModal
@@ -94,18 +124,7 @@ export function ActionUserCard({
         open={openEditModal}
         setOpen={setOpenEditModal}
       />
-      <CommonModal open={openChatModal} setOpen={setOpenChatModal} title="Chat">
-        {zegotokenIsPending ? (
-          <div className="p-10 text-center">Loading Chat Security Token...</div>
-        ) : (
-          <ChatAndVc
-            roomID={roomId ?? ""}
-            toUserId={toUserId ?? ""}
-            userName={name ?? ""}
-            token={zegotoken ?? ""}
-          />
-        )}
-      </CommonModal>
+
       <Card className="text-black shadow-lg">
         <CardContent className="flex items-center justify-between p-5">
           <div className="flex items-center gap-4">
@@ -129,7 +148,7 @@ export function ActionUserCard({
                 variant="default"
                 size="lg"
                 className="flex items-center gap-2 rounded-full px-5 font-medium transition-colors active:scale-95 cursor-pointer"
-                onClick={() => handleOpenChatModal(toUserId)}
+                onClick={() => handleChatRedirect(toUserId)}
               >
                 <MessageCircle className="h-4 w-4 " />
                 <span className="leading-none">Message</span>

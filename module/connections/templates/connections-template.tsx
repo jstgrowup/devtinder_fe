@@ -3,17 +3,29 @@ import { ActionUserCard } from "@/module/requests/components/action-user-card";
 import { useGetConnections } from "../hooks/useConnections";
 import { CommonLoader } from "@/components/common/Loader";
 import DataEmptyHandler from "@/components/common/common-data-empty-handler";
-import { IConnections } from "../types";
 import { IUser } from "@/module/auth/types";
+import Script from "next/script";
+import { useEffect, useState } from "react";
 
 const ConnectionsTemplate = () => {
   const { data: response, isPending } = useGetConnections();
+  const [mounted, setMounted] = useState(false);
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   if (isPending) {
     return <CommonLoader fullScreen={true} />;
   }
   return (
     <>
+      {mounted && (
+        <Script
+          id="razorpay-checkout-js"
+          src="https://checkout.razorpay.com/v1/checkout.js"
+          strategy="lazyOnload"
+        />
+      )}
       <DataEmptyHandler<IUser>
         data={response?.data}
         emptyMessage="No connections available"

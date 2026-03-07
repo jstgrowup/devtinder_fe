@@ -5,4 +5,6 @@ export const routes = {
   profile: "/profile",
   connections: "/connections",
   requests: "/requests",
+  chat: "/chat",
+  videoCall: (channelId: string) => `/video-call/${channelId}`,
 };

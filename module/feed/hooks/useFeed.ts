@@ -7,11 +7,12 @@ import { REQUEST_STATUS } from "../types";
 const useFeed = () => {
   return useMutation({
     mutationFn: async (body: PaginatedQuery) => {
-      return await apiClient.post<IUser[], PaginatedQuery>({
+      const response = await apiClient.post<IUser[], PaginatedQuery>({
         namespace: NAMESPACES.USER,
         data: body,
         apiName: "feed",
       });
+      return response.data;
     },
   });
 };
@@ -19,7 +20,7 @@ const useFeed = () => {
 const useSendConnectionRequest = () => {
   return useMutation({
     mutationFn: async (body: { status: REQUEST_STATUS; toUserId: string }) => {
-      return await apiClient.post<
+      return apiClient.post<
         BaseResponse,
         { status: REQUEST_STATUS; toUserId: string }
       >({
