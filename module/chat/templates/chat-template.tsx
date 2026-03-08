@@ -28,22 +28,7 @@ const ChatTemplate = () => {
   const { token, roomId, toUserId, userName } = useChatRoomStore(
     (state) => state,
   );
-  const syncStreamClient = async (token: string) => {
-    if (streamClient.userID) return;
 
-    try {
-      await streamClient.connectUser(
-        {
-          id: user?._id ?? "",
-          name: user?.firstName,
-          image: user?.photoUrl,
-        },
-        token,
-      );
-    } catch (error) {
-      openErrorToast({ message: `Failed to connect user ${error}` });
-    }
-  };
   const initializeChat = async () => {
     if (!user?._id || !toUserId || !roomId) return;
 
@@ -62,9 +47,8 @@ const ChatTemplate = () => {
     if (!user?._id || !token || !toUserId || !roomId) return;
 
     const tryInit = async () => {
-      if (!streamClient.userID) {
-        await syncStreamClient(token);
-      }
+      if (!user?._id || !token || !toUserId || !roomId) return;
+      if (!streamClient.userID) return;
       await initializeChat();
     };
 

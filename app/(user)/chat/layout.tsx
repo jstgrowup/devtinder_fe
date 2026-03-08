@@ -1,21 +1,77 @@
 "use client";
 import streamClient from "@/module/chat/utils/stream";
 import { Chat } from "stream-chat-react";
-
 import { AppSidebar } from "@/components/app-sidebar";
-
-// import "stream-chat-react/dist/css/v2/index.css";
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-
+import { useAuth } from "@/store/authStore";
+import { useChatRoomStore } from "@/store/chat-room-store";
+import { useEffect, useRef } from "react";
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const { user } = useAuth((state) => state);
+  const { token, setIsStreamReady } = useChatRoomStore((state) => state);
+  const connectionAttempted = useRef(false);
+  useEffect(() => {
+    if (!user?._id || !token || connectionAttempted.current) return;
+
+    let mounted = true;
+    connectionAttempted.current = true;
+
+    const connectUser = async () => {
+      try {
+        if (streamClient.userID) {
+          await streamClient.disconnectUser();
+        }
+
+        await streamClient.connectUser(
+          {
+            id: user._id,
+            name: user.firstName,
+            image: user.photoUrl,
+          },
+          token,
+        );
+
+        const maxAttempts = 10;
+        let attempts = 0;
+
+        while (attempts < maxAttempts) {
+          if (streamClient.wsConnection?.isHealthy) {
+            const connectionId = streamClient.wsConnection.connectionID;
+            if (connectionId) {
+              if (mounted) {
+                setIsStreamReady(true);
+              }
+              return;
+            }
+          }
+
+          await new Promise((resolve) => setTimeout(resolve, 500));
+          attempts++;
+        }
+
+        throw new Error("WebSocket connection timeout");
+      } catch (err) {
+        if (mounted) {
+          setIsStreamReady(false);
+        }
+        connectionAttempted.current = false;
+      }
+    };
+
+    connectUser();
+
+    return () => {
+      mounted = false;
+    };
+  }, [user?._id, token, setIsStreamReady]);
   return (
     <Chat client={streamClient}>
       <SidebarProvider

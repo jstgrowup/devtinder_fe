@@ -4,5 +4,9 @@ if (!process.env.NEXT_PUBLIC_STREAM_API_KEY) {
 }
 const streamClient = StreamChat.getInstance(
   process.env.NEXT_PUBLIC_STREAM_API_KEY,
+  {
+    enableWSFallback: true,
+    timeout: 6000,
+  },
 );
 export default streamClient;

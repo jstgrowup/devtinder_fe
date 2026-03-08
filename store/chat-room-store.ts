@@ -10,6 +10,8 @@ interface IChatRoomStore {
   setToUserId: (userId: string) => void;
   userName: string | null;
   setUserName: (firstName: string) => void;
+  isStreamReady: boolean | null;
+  setIsStreamReady: (val: boolean) => void;
   resetChatRoom: () => void;
 }
 
@@ -26,6 +28,8 @@ export const useChatRoomStore = create<IChatRoomStore>()(
       userName: null,
       setUserName: (newUserName: string | null) =>
         set({ userName: newUserName }),
+      isStreamReady: false,
+      setIsStreamReady: (val: boolean) => set({ isStreamReady: val }),
       resetChatRoom: () =>
         set({ token: null, roomId: null, toUserId: null, userName: null }),
     }),
