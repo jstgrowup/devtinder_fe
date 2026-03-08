@@ -1,6 +1,7 @@
 "use client";
 import { CommonLoader } from "@/components/common/Loader";
 import { StatusCard } from "@/components/common/status-card";
+import { openErrorToast } from "@/components/common/toast";
 import { useAuth } from "@/store/authStore";
 import { useChatRoomStore } from "@/store/chat-room-store";
 import {
@@ -35,16 +36,22 @@ function Layout({ children }: { children: React.ReactNode }) {
       setclient(null);
       return;
     }
-    const newClient = new StreamVideoClient({
-      apiKey: process.env.NEXT_PUBLIC_STREAM_API_KEY as string,
-      user: streamUser,
-      token: token ?? "",
-    });
-    setclient(newClient);
-    return () => {
-      newClient.disconnectUser().catch((error) => console.log(error));
-    };
+    console.log("Initializing video client for user:", streamUser.id);
+    try {
+      const newClient = new StreamVideoClient({
+        apiKey: process.env.NEXT_PUBLIC_STREAM_API_KEY as string,
+        user: streamUser,
+        token: token ?? "",
+      });
+      setclient(newClient);
+      return () => {
+        newClient.disconnectUser().catch((error) => console.log(error));
+      };
+    } catch (error) {
+      openErrorToast({ message: "Failed to initiate the video call" });
+    }
   }, [streamUser, token]);
+
   useEffect(() => {
     if (!client || !channelId) return;
     setError(null);

@@ -83,6 +83,7 @@ export function ActionUserCard({
   const connectGetStreamUser = async (token: string) => {
     if (streamClient.userID) {
       await streamClient.disconnectUser();
+      await new Promise((resolve) => setTimeout(resolve, 100));
     }
     try {
       await streamClient.connectUser(
@@ -106,12 +107,30 @@ export function ActionUserCard({
           setToken(response ?? "");
           await connectGetStreamUser(response ?? "");
           const roomId = [user?._id, toUserId].sort().join("_");
+          let channel = streamClient.channel("messaging", roomId);
+          try {
+            await channel.watch();
+
+            const members = Object.keys(channel.state.members);
+
+            if (members.length === 0) {
+              await channel.addMembers([user?._id ?? "", toUserId]);
+              await channel.watch();
+            }
+          } catch (error) {
+            channel = streamClient.channel("messaging", roomId, {
+              members: [user?._id ?? "", toUserId],
+              created_by_id: user?._id,
+            });
+
+            await channel.create();
+            await channel.watch();
+          }
+
           setRoomId(roomId ?? "");
           setToUserId(toUserId);
           setUserName(name);
-          setTimeout(() => {
-            router.push(routes.chat);
-          }, 100);
+          router.push(routes.chat);
         },
       },
     );
