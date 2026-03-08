@@ -47,7 +47,6 @@ const ChatTemplate = () => {
     if (!user?._id || !token || !toUserId || !roomId) return;
 
     const tryInit = async () => {
-      if (!user?._id || !token || !toUserId || !roomId) return;
       if (!streamClient.userID) return;
       await initializeChat();
     };

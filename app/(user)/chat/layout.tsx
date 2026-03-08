@@ -39,25 +39,7 @@ export default function RootLayout({
           token,
         );
 
-        const maxAttempts = 10;
-        let attempts = 0;
-
-        while (attempts < maxAttempts) {
-          if (streamClient.wsConnection?.isHealthy) {
-            const connectionId = streamClient.wsConnection.connectionID;
-            if (connectionId) {
-              if (mounted) {
-                setIsStreamReady(true);
-              }
-              return;
-            }
-          }
-
-          await new Promise((resolve) => setTimeout(resolve, 500));
-          attempts++;
-        }
-
-        throw new Error("WebSocket connection timeout");
+        setIsStreamReady(true);
       } catch (err) {
         if (mounted) {
           setIsStreamReady(false);

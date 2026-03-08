@@ -80,7 +80,7 @@ export function ActionUserCard({
       },
     });
   };
-  const syncUser = async (token: string) => {
+  const connectGetStreamUser = async (token: string) => {
     if (streamClient.userID) {
       await streamClient.disconnectUser();
     }
@@ -93,22 +93,6 @@ export function ActionUserCard({
         },
         token,
       );
-      return new Promise((resolve) => {
-        const checkConnection = setInterval(() => {
-          if (
-            streamClient.wsConnection?.isHealthy &&
-            streamClient.wsConnection?.connectionID
-          ) {
-            clearInterval(checkConnection);
-            resolve(true);
-          }
-        }, 100);
-
-        setTimeout(() => {
-          clearInterval(checkConnection);
-          resolve(false);
-        }, 5000);
-      });
     } catch (error) {
       openErrorToast({ message: `Failed to connect user ${error}` });
     }
@@ -120,25 +104,7 @@ export function ActionUserCard({
       {
         onSuccess: async (response) => {
           setToken(response ?? "");
-          await syncUser(response ?? "");
-          let attempts = 0;
-          const maxAttempts = 10;
-
-          while (attempts < maxAttempts) {
-            if (
-              streamClient.wsConnection?.isHealthy &&
-              streamClient.wsConnection?.connectionID
-            ) {
-              break;
-            }
-
-            await new Promise((resolve) => setTimeout(resolve, 500));
-            attempts++;
-          }
-
-          if (attempts === maxAttempts) {
-            throw new Error("WebSocket connection timeout");
-          }
+          await connectGetStreamUser(response ?? "");
           const roomId = [user?._id, toUserId].sort().join("_");
           setRoomId(roomId ?? "");
           setToUserId(toUserId);
