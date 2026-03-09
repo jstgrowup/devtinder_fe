@@ -4,8 +4,7 @@ import "stream-chat-react/dist/css/v2/index.css";
 import { useAuth } from "@/store/authStore";
 import { useChatRoomStore } from "@/store/chat-room-store";
 import streamClient from "../utils/stream";
-import { useCreateGetStreamToken } from "@/module/requests/hooks/useRequests";
-import { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { openErrorToast } from "@/components/common/toast";
 import {
   Channel,
@@ -25,10 +24,20 @@ const ChatTemplate = () => {
   const { user } = useAuth((state) => state);
   const { channel, setActiveChannel } = useChatContext();
   const router = useRouter();
-  const { token, roomId, toUserId, userName } = useChatRoomStore(
-    (state) => state,
-  );
+  const { token, roomId, toUserId } = useChatRoomStore((state) => state);
+  const displayUserName = React.useMemo(() => {
+    if (!channel || !user?._id) return "Chat";
 
+    const members = Object.values(channel.state.members).filter(
+      (m) => m.user?.id !== user._id,
+    );
+
+    if (members.length === 1) {
+      return members[0].user?.name || members[0].user?.id || "Unknown User";
+    }
+
+    return "No members";
+  }, [channel, user?._id]);
   const initializeChat = async () => {
     if (!user?._id || !toUserId || !roomId) return;
 
@@ -44,6 +53,7 @@ const ChatTemplate = () => {
   };
 
   useEffect(() => {
+    if (channel) return;
     if (!user?._id || !token || !toUserId || !roomId) return;
 
     const tryInit = async () => {
@@ -52,7 +62,7 @@ const ChatTemplate = () => {
     };
 
     tryInit();
-  }, [user?._id, token, toUserId, roomId]);
+  }, [user?._id, token, toUserId, roomId, setActiveChannel]);
   const handleCall = () => {
     if (!channel) return;
     router.push(routes.videoCall(channel.id ?? ""));
@@ -81,7 +91,7 @@ const ChatTemplate = () => {
                 {channel.data?.member_count === 1 ? (
                   <ChannelHeader title="everyone else left the chat" />
                 ) : (
-                  <ChannelHeader title={userName ?? ""} />
+                  <ChannelHeader title={displayUserName} />
                 )}
                 <div className="flex items-center gap-2 pr-4">
                   <Button variant={"outline"} onClick={handleCall}>
