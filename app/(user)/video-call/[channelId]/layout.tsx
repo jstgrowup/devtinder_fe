@@ -4,6 +4,7 @@ import { StatusCard } from "@/components/common/status-card";
 import { openErrorToast } from "@/components/common/toast";
 import { useAuth } from "@/store/authStore";
 import { useChatRoomStore } from "@/store/chat-room-store";
+import "@stream-io/video-react-sdk/dist/css/styles.css";
 import {
   Call,
   CallingState,
@@ -59,7 +60,7 @@ function Layout({ children }: { children: React.ReactNode }) {
     const joinCall = async () => {
       try {
         await streamCall.join({ create: true });
-        setCall(call);
+        setCall(streamCall);
       } catch (error) {
         setError(
           error instanceof Error ? error.message : "Failed to join call",
