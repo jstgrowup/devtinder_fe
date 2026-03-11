@@ -2,7 +2,7 @@
 import { CommonLoader } from "@/components/common/Loader";
 import UserCard from "../components/user-cards";
 import { useFeed, useSendConnectionRequest } from "../hooks/useFeed";
-import { openErrorToast, openSuccessToast } from "@/components/common/toast";
+import { openErrorToast, openSuccessToast } from "@/components/common/Toast";
 import { REQUEST_STATUS } from "../types";
 import { useEffect, useState } from "react";
 import { IUser } from "@/module/auth/types";

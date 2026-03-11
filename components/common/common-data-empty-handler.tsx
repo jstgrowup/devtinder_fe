@@ -1,5 +1,5 @@
 import React, { JSX } from "react";
-import { CommonEmptyState } from "@/components/common/common-empty-state";
+import { CommonEmptyState } from "@/components/common/Common-empty-state";
 
 interface DataEmptyHandlerProps<T> {
   data?: T | T[];

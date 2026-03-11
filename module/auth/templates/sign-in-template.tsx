@@ -2,7 +2,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLogin } from "../hooks/useAuth";
-import { openErrorToast, openSuccessToast } from "@/components/common/toast";
+import { openErrorToast, openSuccessToast } from "@/components/common/Toast";
 import { LoginSchemaType, zLogin } from "../utils/zod";
 import { useAuth } from "@/store/authStore";
 import { useRouter } from "next/navigation";

@@ -2,7 +2,7 @@
 import { ActionUserCard } from "@/module/requests/components/action-user-card";
 import { useGetConnections } from "../hooks/useConnections";
 import { CommonLoader } from "@/components/common/Loader";
-import DataEmptyHandler from "@/components/common/common-data-empty-handler";
+import DataEmptyHandler from "@/components/common/Common-data-empty-handler";
 import { IUser } from "@/module/auth/types";
 import Script from "next/script";
 import { useEffect, useState } from "react";

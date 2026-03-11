@@ -1,7 +1,7 @@
 "use client";
 import { CommonLoader } from "@/components/common/Loader";
-import { StatusCard } from "@/components/common/status-card";
-import { openErrorToast } from "@/components/common/toast";
+import { StatusCard } from "@/components/common/Status-card";
+import { openErrorToast } from "@/components/common/Toast";
 import { routes } from "@/config/routes";
 import {
   CallControls,

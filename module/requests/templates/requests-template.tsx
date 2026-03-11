@@ -6,8 +6,8 @@ import {
   useGetRequests,
   useReviewConnectionRequest,
 } from "../hooks/useRequests";
-import { openErrorToast, openSuccessToast } from "@/components/common/toast";
-import DataEmptyHandler from "@/components/common/common-data-empty-handler";
+import { openErrorToast, openSuccessToast } from "@/components/common/Toast";
+import DataEmptyHandler from "@/components/common/Common-data-empty-handler";
 import { IConnectionRequests } from "../types";
 import { CommonLoader } from "@/components/common/Loader";
 import { useQueryClient } from "@tanstack/react-query";
