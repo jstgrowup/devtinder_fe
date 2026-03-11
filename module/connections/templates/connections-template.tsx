@@ -1,8 +1,8 @@
 "use client";
 import { ActionUserCard } from "@/module/requests/components/action-user-card";
 import { useGetConnections } from "../hooks/useConnections";
-import { CommonLoader } from "@/components/Common/Loader";
-import DataEmptyHandler from "@/components/Common/CommonDataEmptyHandler";
+import { CommonLoader } from "@/components/common/Loader";
+import DataEmptyHandler from "@/components/common/CommonDataEmptyHandler";
 import { IUser } from "@/module/auth/types";
 import Script from "next/script";
 import { useEffect, useState } from "react";

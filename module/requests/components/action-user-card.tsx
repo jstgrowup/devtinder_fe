@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { REQUEST_STATUS } from "@/module/feed/types";
 import { Lock, MessageCircle } from "lucide-react";
 import { useState } from "react";
-import { CommonTooltip } from "@/components/Common/Tooltip";
+import { CommonTooltip } from "@/components/common/Tooltip";
 import SubscriptionModal from "./subscription";
 import {
   useCreateOrder,
@@ -18,7 +18,7 @@ import { useChatRoomStore } from "@/store/chat-room-store";
 import { useRouter } from "next/navigation";
 import { routes } from "@/config/routes";
 import streamClient from "@/module/chat/utils/stream";
-import { openErrorToast } from "@/components/Common/Toast";
+import { openErrorToast } from "@/components/common/Toast";
 
 interface ActionUserCardProps {
   toUserId: string;

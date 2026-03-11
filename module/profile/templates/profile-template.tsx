@@ -9,7 +9,7 @@ import { EditProfileModal } from "../components/edit-profile";
 import { useState } from "react";
 import { useUpdateProfile } from "../hooks/useProfile";
 import { EditProfileSchemaType } from "../utils/zod";
-import { openErrorToast, openSuccessToast } from "@/components/Common/Toast";
+import { openErrorToast, openSuccessToast } from "@/components/common/Toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { CommonResponse } from "@/types";
 import { IUser } from "@/module/auth/types";
