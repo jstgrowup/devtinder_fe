@@ -32,8 +32,8 @@ const LoginTemplate = () => {
   const onSubmit = (payload: LoginSchemaType) => {
     login(payload, {
       onSuccess: (response) => {
-        setUser(response.data);
-        openSuccessToast({ message: response.message });
+        setUser(response?.data?.data ?? null);
+        openSuccessToast({ message: response?.message });
         router.push(routes.feed);
       },
       onError: (error) => {
