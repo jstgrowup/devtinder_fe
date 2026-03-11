@@ -4,8 +4,8 @@ import "stream-chat-react/dist/css/v2/index.css";
 import { useAuth } from "@/store/authStore";
 import { useChatRoomStore } from "@/store/chat-room-store";
 import streamClient from "../utils/stream";
-import React, { useCallback, useEffect } from "react";
-import { openErrorToast } from "@/components/common/Toast";
+import React, { useEffect } from "react";
+import { openErrorToast } from "../../../components/common/Toast";
 import {
   Channel,
   ChannelHeader,
