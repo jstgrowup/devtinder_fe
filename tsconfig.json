@@ -21,13 +21,13 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./*"],
-      "@/components/*": ["./components/*"],
-      "@/module/*": ["./module/*"],
-      "@/hooks/*": ["./hooks/*"],
-      "@/config/*": ["./config/*"],
-      "@/lib/*": ["./lib/*"],
-      "@/store/*": ["./store/*"],
-      "@/types/*": ["./types/*"]
+      "@/components/*": ["components/*"],
+      "@/module/*": ["module/*"],
+      "@/hooks/*": ["hooks/*"],
+      "@/config/*": ["config/*"],
+      "@/lib/*": ["lib/*"],
+      "@/store/*": ["store/*"],
+      "@/types/*": ["types/*"]
     }
   },
   "include": [
@@ -38,5 +38,14 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+  "experimental": {
+    "turbo": {
+      "resolveAlias": {
+        "@/components/*": ["components/*"],
+        "@/module/*": ["module/*"],
+        "@/hooks/*": ["hooks/*"]
+      }
+    }
+  }
 }
