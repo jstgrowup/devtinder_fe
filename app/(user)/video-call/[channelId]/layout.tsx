@@ -1,6 +1,6 @@
 "use client";
 import { CommonLoader } from "@/components/common/Loader";
-import { StatusCard } from "@/components/common/Status-card";
+import { StatusCard } from "@/components/common/StatusCard";
 import { openErrorToast } from "@/components/common/Toast";
 import { useAuth } from "@/store/authStore";
 import { useChatRoomStore } from "@/store/chat-room-store";
