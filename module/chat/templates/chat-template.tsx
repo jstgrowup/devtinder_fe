@@ -5,7 +5,7 @@ import { useAuth } from "@/store/authStore";
 import { useChatRoomStore } from "@/store/chat-room-store";
 import streamClient from "../utils/stream";
 import React, { useEffect } from "react";
-import { openErrorToast } from "../../../components/common/Toast";
+import { openErrorToast } from "@/components/common/Toast";
 import {
   Channel,
   ChannelHeader,

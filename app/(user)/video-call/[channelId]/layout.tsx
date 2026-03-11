@@ -1,7 +1,7 @@
 "use client";
 import { CommonLoader } from "@/components/common/Loader";
 import { StatusCard } from "@/components/common/StatusCard";
-import { openErrorToast } from "../../../../components/common/Toast";
+import { openErrorToast } from "@/components/common/Toast";
 import { useAuth } from "@/store/authStore";
 import { useChatRoomStore } from "@/store/chat-room-store";
 import "@stream-io/video-react-sdk/dist/css/styles.css";

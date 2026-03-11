@@ -18,7 +18,7 @@ import { useChatRoomStore } from "@/store/chat-room-store";
 import { useRouter } from "next/navigation";
 import { routes } from "@/config/routes";
 import streamClient from "@/module/chat/utils/stream";
-import { openErrorToast } from "../../../components/common/Toast";
+import { openErrorToast } from "@/components/common/Toast";
 
 interface ActionUserCardProps {
   toUserId: string;
