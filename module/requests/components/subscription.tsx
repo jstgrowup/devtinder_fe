@@ -1,8 +1,8 @@
 import React from "react";
 import { IPaymentReq } from "../types";
-import CommonButton from "@/components/common/Button";
+import CommonButton from "@/components/Common/Button";
 import { SUBSCRIPTION_PLANS } from "@/types";
-import CommonModal from "@/components/common/Common-modal";
+import CommonModal from "@/components/Common/CommonModal";
 interface EditProfileModalProps {
   onCreateOrder: (body: IPaymentReq) => void;
   open: boolean;

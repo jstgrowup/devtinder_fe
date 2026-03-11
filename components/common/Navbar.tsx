@@ -14,7 +14,7 @@ import {
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
-import { CommonLoader } from "@/components/common/Loader";
+import { CommonLoader } from "@/components/Common/Loader";
 
 const Navbar = () => {
   const { user, userIsLoading, storeLogout } = useAuth((state) => state);

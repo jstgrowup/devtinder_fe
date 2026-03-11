@@ -1,8 +1,8 @@
 "use client";
-import { CommonLoader } from "@/components/common/Loader";
+import { CommonLoader } from "@/components/Common/Loader";
 import UserCard from "../components/user-cards";
 import { useFeed, useSendConnectionRequest } from "../hooks/useFeed";
-import { openErrorToast, openSuccessToast } from "@/components/common/Toast";
+import { openErrorToast, openSuccessToast } from "@/components/Common/Toast";
 import { REQUEST_STATUS } from "../types";
 import { useEffect, useState } from "react";
 import { IUser } from "@/module/auth/types";
