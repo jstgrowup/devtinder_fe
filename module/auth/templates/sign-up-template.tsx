@@ -34,7 +34,7 @@ const SignUpTemplate = () => {
 
       {
         onSuccess: (response) => {
-          setUser(response.data);
+          setUser(response?.data?.data ?? null);
           openSuccessToast({ message: response.message });
           router.push(routes.profile);
         },

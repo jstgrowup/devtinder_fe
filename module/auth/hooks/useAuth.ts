@@ -19,7 +19,7 @@ const useLogin = () => {
 const useSignup = () => {
   return useMutation({
     mutationFn: async (body: SignupSchemaType) => {
-      return apiClient.post<IUser, SignupSchemaType>({
+      return apiClient.post<ClientResponse<IUser>, SignupSchemaType>({
         namespace: NAMESPACES.AUTH,
         apiName: "signup",
         data: body,
