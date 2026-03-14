@@ -4,20 +4,18 @@ import {
   CommonResponseNew,
 } from "@/types";
 import axios from "axios";
-const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
-const HEADERS = {
+export const HEADERS = {
   "Content-Type": "application/json",
 };
 
 //Base instance
 const instance = axios.create({
-  baseURL: apiUrl,
-  headers: {
-    ...HEADERS,
-  },
+  baseURL: "",
+  headers: { ...HEADERS },
   withCredentials: true,
 });
+
 // 1. Turn apiClient into an object with a generic .post method
 export const apiClient = {
   post: async <TResponse = any, TRequest = any>({
@@ -29,11 +27,14 @@ export const apiClient = {
     apiName: string;
     data: TRequest;
   }): Promise<ClientResponse<TResponse>> => {
-    const response = await instance.post<CommonResponseNew<TResponse>>("/api", {
-      namespace,
-      apiName,
-      data,
-    });
+    const response = await instance.post<CommonResponseNew<TResponse>>(
+      "/api/proxy",
+      {
+        namespace,
+        apiName,
+        data,
+      },
+    );
 
     if (response.data.status === COMMON_RESPONSE_STATUS.ERROR) {
       throw new Error(response.data.data.message || "API Error");
